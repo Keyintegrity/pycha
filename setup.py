@@ -37,7 +37,7 @@ setup(
     license="LGPL 3",
     keywords="chart cairo",
     packages=['pycha', 'chavier'],
-    url='http://www.lorenzogil.com/projects/pycha/',
+    url='http://bitbucket.org/lgs/pycha/',
     # if would be nice if pycairo would have an egg (sigh)
 #    install_requires = [
 #        'pycairo',
