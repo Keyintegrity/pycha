@@ -113,7 +113,8 @@ class App(object):
             show=bool,
             inside=bool,
             fontSize=int,
-            fontColor=str
+            fontColor=str,
+            skipSmallValues=bool,
             ),
         fillOpacity=float,
         shouldFill=bool,

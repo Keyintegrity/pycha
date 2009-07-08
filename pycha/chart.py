@@ -700,6 +700,7 @@ DEFAULT_OPTIONS = Option(
         inside=False,
         fontSize=11,
         fontColor='#000000',
+        skipSmallValues=True,
     ),
     fillOpacity=1.0,
     shouldFill=True,

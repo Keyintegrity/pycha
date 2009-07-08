@@ -68,7 +68,7 @@ class BarChart(Chart):
             w = self.area.w * bar.w
             h = self.area.h * bar.h
 
-            if w < 1 or h < 1:
+            if (w < 1 or h < 1) and self.options.yvals.skipSmallValues:
                 return # don't draw when the bar is too small
 
             if self.options.stroke.shadow:
