@@ -265,8 +265,9 @@ class Chart(object):
             interval = self.options.axis.y.interval
             label = (divmod(self.minyval, interval)[0] + 1) * interval
             pos = 1.0 - (self.yscale * (label - self.minyval))
+            prec = self.options.axis.y.tickPrecision
             while 0.0 <= pos <= 1.0:
-                self.yticks.append((pos, label))
+                self.yticks.append((pos, round(label, prec)))
                 label += interval
                 pos = 1.0 - (self.yscale * (label - self.minyval))
 
