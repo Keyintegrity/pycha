@@ -115,6 +115,7 @@ class App(object):
             fontSize=int,
             fontColor=str,
             skipSmallValues=bool,
+            snapToOrigin=bool,
             ),
         fillOpacity=float,
         shouldFill=bool,

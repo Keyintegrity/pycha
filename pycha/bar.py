@@ -145,7 +145,9 @@ class VerticalBarChart(BarChart):
 
     def _renderYVal(self, cx, label, labelW, labelH, barX, barY, barW, barH):
         x = barX + (barW / 2.0) - (labelW / 2.0)
-        if self.options.yvals.inside:
+        if self.options.yvals.snapToOrigin:
+            y = barY + barH - 0.5 * labelH
+        elif self.options.yvals.inside:
             y = barY + (1.5 * labelH)
         else:
             y = barY - 0.5 * labelH
@@ -217,7 +219,9 @@ class HorizontalBarChart(BarChart):
 
     def _renderYVal(self, cx, label, labelW, labelH, barX, barY, barW, barH):
         y = barY + (barH / 2.0) + (labelH / 2.0)
-        if self.options.yvals.inside:
+        if self.options.yvals.snapToOrigin:
+            x = barX + 2
+        elif self.options.yvals.inside:
             x = barX + barW - (1.2 * labelW)
         else:
             x = barX + barW + 0.2 * labelW
