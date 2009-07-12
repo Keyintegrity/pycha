@@ -95,7 +95,10 @@ class BarChart(Chart):
                 cx.set_font_size(self.options.yvals.fontSize)
                 cx.set_source_rgb(*hex2rgb(self.options.yvals.fontColor))
 
-                label = unicode(bar.yval)
+                if callable(self.options.yvals.renderer):
+                    label = unicode(self.options.yvals.renderer(bar))
+                else:
+                    label = unicode(bar.yval)
                 extents = cx.text_extents(label)
                 labelW = extents[2]
                 labelH = extents[3]

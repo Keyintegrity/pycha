@@ -703,6 +703,7 @@ DEFAULT_OPTIONS = Option(
         fontColor='#000000',
         skipSmallValues=True,
         snapToOrigin=False,
+        renderer=None
     ),
     fillOpacity=1.0,
     shouldFill=True,
