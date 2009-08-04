@@ -89,6 +89,24 @@ class BarChart(Chart):
                     cx.rectangle(x, y, w, h)
                     cx.stroke()
 
+            if bar.yerr is not None:
+                # XXX this only works for vert bar charts
+                cx.set_source_rgb(0,0,0)
+                center = x + w / 2
+                left = center - 5
+                right = center + 5
+                top = y + h * bar.yerr / bar.yval
+                bottom = y - h * bar.yerr / bar.yval
+                cx.move_to(left, top)
+                cx.line_to(right, top)
+                cx.stroke()
+                cx.move_to(center, top)
+                cx.line_to(center, bottom)
+                cx.stroke()
+                cx.move_to(left, bottom)
+                cx.line_to(right, bottom)
+                cx.stroke()
+
             # render yvals above/beside bars
             if self.options.yvals.show:
                 cx.save()
@@ -123,7 +141,8 @@ class VerticalBarChart(BarChart):
         super(VerticalBarChart, self)._updateChart()
         for i, (name, store) in enumerate(self.datasets):
             for item in store:
-                xval, yval = item
+                if len(item) == 3: xval, yval, yerr = item
+                else: xval, yval, yerr = item + (None,)
                 x = (((xval - self.minxval) * self.xscale)
                     + self.barMargin + (i * self.barWidthForSet))
                 w = self.barWidthForSet
@@ -132,7 +151,7 @@ class VerticalBarChart(BarChart):
                     y = (1.0 - h) - self.area.origin
                 else:
                     y = 1 - self.area.origin
-                rect = Rect(x, y, w, h, xval, yval, name)
+                rect = Rect(x, y, w, h, xval, yval, yerr, name)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
                     self.bars.append(rect)
@@ -171,7 +190,8 @@ class HorizontalBarChart(BarChart):
 
         for i, (name, store) in enumerate(self.datasets):
             for item in store:
-                xval, yval = item
+                if len(item) == 3: xval, yval, yerr = item
+                else: xval, yval, yerr = item + (None,)
                 y = (((xval - self.minxval) * self.xscale)
                      + self.barMargin + (i * self.barWidthForSet))
                 h = self.barWidthForSet
@@ -180,10 +200,11 @@ class HorizontalBarChart(BarChart):
                     x = self.area.origin
                 else:
                     x = self.area.origin - w
-                rect = Rect(x, y, w, h, xval, yval, name)
+                rect = Rect(x, y, w, h, xval, yval, yerr, name)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
                     self.bars.append(rect)
+
 
     def _updateTicks(self):
         """Evaluates bar ticks"""
@@ -239,12 +260,12 @@ class HorizontalBarChart(BarChart):
 
 class Rect(object):
 
-    def __init__(self, x, y, w, h, xval, yval, name):
+    def __init__(self, x, y, w, h, xval, yval, yerr, name):
         self.x, self.y, self.w, self.h = x, y, w, h
-        self.xval, self.yval = xval, yval
+        self.xval, self.yval, self.yerr = xval, yval, yerr
         self.name = name
 
     def __str__(self):
-        return ("<pycha.bar.Rect@(%.2f, %.2f) %.2fx%.2f (%.2f, %.2f) %s>"
+        return ("<pycha.bar.Rect@(%.2f, %.2f) %.2fx%.2f (%.2f, %.2f, %.2f) %s>"
                 % (self.x, self.y, self.w, self.h, self.xval, self.yval,
-                   self.name))
+                   self.yerr, self.name))
