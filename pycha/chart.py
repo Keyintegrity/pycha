@@ -578,7 +578,7 @@ class Chart(object):
                      width, height)
         cx.set_source_rgba(1, 1, 1, self.options.legend.opacity)
         cx.fill_preserve()
-        cx.set_line_width(self.options.stroke.width)
+        cx.set_line_width(self.options.legend.borderWidth)
         cx.set_source_rgb(*hex2rgb(self.options.legend.borderColor))
         cx.stroke()
 
@@ -681,6 +681,7 @@ DEFAULT_OPTIONS = Option(
     legend=Option(
         opacity=0.8,
         borderColor='#000000',
+        borderWidth=2,
         hide=False,
         position=Option(top=20, left=40, bottom=None, right=None),
     ),
