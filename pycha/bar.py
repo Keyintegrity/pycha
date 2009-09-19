@@ -235,6 +235,10 @@ class HorizontalBarChart(BarChart):
     def _getShadowRectangle(self, x, y, w, h):
         return (x, y-2, w+2, h+4)
 
+    def _renderXAxisLabel(self, cx, labelText):
+        labelText = self.options.axis.x.label
+        super(HorizontalBarChart, self)._renderYAxisLabel(cx, labelText)
+
     def _renderXAxis(self, cx):
         """Draws the horizontal line representing the X axis"""
         cx.new_path()
@@ -242,6 +246,10 @@ class HorizontalBarChart(BarChart):
         cx.line_to(self.area.x + self.area.w, self.area.y + self.area.h)
         cx.close_path()
         cx.stroke()
+
+    def _renderYAxisLabel(self, cx, labelText):
+        labelText = self.options.axis.y.label
+        super(HorizontalBarChart, self)._renderXAxisLabel(cx, labelText)
 
     def _renderYAxis(self, cx):
         # draws the vertical line representing the Y axis
