@@ -10,7 +10,7 @@ When releasing software, the following steps should be taken:
 1. Make sure all automated tests of the package pass.
 
 2. Fill in the release date in ``CHANGES.txt``.  Make sure the
-   changelog is complete.
+   changelog is complete. Commit this change.
 
 3. Make sure the package metadata in ``setup.py`` is up-to-date.  You
    can verify the information by re-generating the egg info::
@@ -28,56 +28,37 @@ When releasing software, the following steps should be taken:
    render the long description nicely.  It will treat it as plain text
    instead.
 
-4. Create a release tag:
+4. Remove the "dev" marker from the ``setup.py`` or the file where
+   setup.py reads it (e.g. pycha/__init__.py). Commit this change.
 
-   svn copy http://www.lorenzogil.com/svn/pycha/trunk \
-            http://www.lorenzogil.com/svn/pycha/tags/X.Y.Z
+5. Create a release tag:
 
-5. Get a separate checkout of the release tag for creating the
-   distribution tarball and eggs.  It is important that you don't do
-   this on the trunk or release branch to avoid
+   hg tag X.Y.Z
 
-   - forgetting to tag the release at all.
+6. Create a distribution and upload it to PyPI using the following
+   command::
 
-   - forgetting to clean up the ``build`` directory that distutils and
-     setuptools create. Failure to do so may result in old artefacts
-     in eggs.
+      python setup.py register sdist upload
 
-   - forgetting to check in files that are needed by ``setup.py`` or
-     as package data.  Setuptools will only include them in the
-     distribution if they are checked into subversion.
+   If the package contains C extensions, you need to upload a
+   binary Windows egg as well::
 
-   In the checkout of the tag perform the following steps:
+      python setup.py bdist_egg upload
 
-   a) Remove the "dev" marker from the version in ``setup.py``
+   This may require the help from someone with a Windows
+   installation and proper tools (Visual C).
 
-   b) Commit these changes.  It's acceptable that these changes modify
-      the tag since they're purely related to release management.
+   Binary eggs for Linux or MacOSX should **never** be uploaded
+   because those platforms vary too much to be binary-compatible
+   with each other, due to varying UCS support, different libc
+   versions and linking models (framework / non-framework).
 
-   c) Create a distribution and upload it to PyPI using the following
-      command::
-
-        python setup.py register sdist upload
-
-      If the package contains C extensions, you need to upload a
-      binary Windows egg as well::
-
-        python setup.py bdist_egg upload
-
-      This may require the help from someone with a Windows
-      installation and proper tools (Visual C).
-
-      Binary eggs for Linux or MacOSX should **never** be uploaded
-      because those platforms vary too much to be binary-compatible
-      with each other, due to varying UCS support, different libc
-      versions and linking models (framework / non-framework).
-
-6. Back on the trunk or the release branch, increase the version
-   number in ``setup.py`` to the *next* release while preserving the
-   ``dev`` marker.  The convention is that the trunk or release branch
-   always points to the upcoming release, *not* the one that has been
-   released already.  So if you've just released version 3.4.1, you
-   should change ``setup.py`` to read::
+7. Increase the version number in ``setup.py`` to the *next*
+   release while preserving the ``dev`` marker.  The convention
+   is that the trunk or release branch always points to the
+   upcoming release, *not* the one that has been released already.
+   So if you've just released version 3.4.1, you should change
+   ``setup.py`` to read::
 
      setup(
          name='...',
@@ -108,7 +89,7 @@ When releasing software, the following steps should be taken:
 
      Initial release as separate egg.
 
-6. If this is a non bug fix release, write the release notes at
+8. If this is a non bug fix release, write the release notes at
    http://www.lorenzogil.com/projects/pycha/wiki/ReleaseNotes/
 
 **Important:** Once released to PyPI or any other public download
