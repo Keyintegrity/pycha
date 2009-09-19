@@ -1,9 +1,14 @@
 Changes
 =======
 
-0.5.1 (unreleased)
+0.5.1 (2009-09-19)
 ------------------
-- ...
+- Several bug fixes (Lorenzo)
+- Draw circles instead of lines for scatter chart symbols (Lorenzo)
+- Error bars (Yang Zhang)
+- Improve tick labels (Simon)
+- Add labels with yvals next to the bars (Simon (Vsevolod) Ilyushchenko)
+- Change the project website (Lorenzo)
 
 0.5.0 (2009-03-22)
 ------------------
