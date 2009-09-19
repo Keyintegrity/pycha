@@ -136,6 +136,34 @@ class PieTests(unittest.TestCase):
                                      (1, 'Second dataset (20.0%)'),
                                      (2, 'Third dataset (70.0%)')])
 
+    def test_issue5(self):
+        """See http://bitbucket.org/lgs/pycha/issue/5/"""
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 500, 500)
+        dataset = (
+            ('dataset1', ([0, 30],)),
+            ('dataset2', ([0, 0],)), # Empty set!!
+            ('dataset3', ([0, 70],)),
+            )
+        ch = pycha.pie.PieChart(surface, {})
+        ch.addDataset(dataset)
+        ch._updateXY()
+        ch._updateChart()
+
+        # there is no slice for the empty set
+        slices = (
+            pycha.pie.Slice('dataset1', 0.3, 0, 30, 0),
+            pycha.pie.Slice('dataset3', 0.7, 2, 70, 0.3),
+            )
+
+        for i, slice in enumerate(slices):
+            s1, s2 = ch.slices[i], slice
+            self.assertEqual(s1.name, s2.name)
+            self.assertAlmostEqual(s1.fraction, s2.fraction, 4)
+            self.assertAlmostEqual(s1.startAngle, s2.startAngle, 4)
+            self.assertAlmostEqual(s1.endAngle, s2.endAngle, 4)
+            self.assertEqual(s1.xval, s2.xval)
+            self.assertEqual(s1.yval, s2.yval)
+
 
 def test_suite():
     return unittest.TestSuite((

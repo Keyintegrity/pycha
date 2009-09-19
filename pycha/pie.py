@@ -49,8 +49,8 @@ class PieChart(Chart):
 
         self.slices = []
         for slice in slices:
-            angle += fraction
             if slice['value'][1] > 0:
+                angle += fraction
                 fraction = slice['value'][1] / s
                 self.slices.append(Slice(slice['name'], fraction,
                                          slice['value'][0], slice['value'][1],
