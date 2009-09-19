@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
+
 from pycha.line import LineChart
 
 
@@ -23,31 +25,17 @@ class ScatterplotChart(LineChart):
     def _renderChart(self, cx):
         """Renders a scatterplot"""
 
-        def drawSymbol(point, size=2):
+        def drawSymbol(point, size):
             ox = point.x * self.area.w + self.area.x
             oy = point.y * self.area.h + self.area.y
-            cx.move_to(ox-size, oy)
-            cx.line_to(ox+size, oy)
-            cx.move_to(ox, oy-size)
-            cx.line_to(ox, oy+size)
+            cx.arc(ox, oy, size, 0.0, 2 * math.pi)
+            cx.fill()
 
-        def preparePath(storeName, size=2):
-            cx.new_path()
-            for point in self.points:
-                if point.name == storeName:
-                    drawSymbol(point, size)
-            cx.close_path()
-
-        cx.save()
-
-        cx.set_line_width(self.options.stroke.width)
-        # TODO: self.options.stroke.shadow
         for key in self._getDatasetsKeys():
             cx.set_source_rgb(*self.colorScheme[key])
-            preparePath(key)
-            cx.stroke()
-
-        cx.restore()
+            for point in self.points:
+                if point.name == key:
+                    drawSymbol(point, self.options.stroke.width)
 
     def _renderLines(self, cx):
         # We don't need lines in the background
