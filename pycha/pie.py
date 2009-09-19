@@ -197,7 +197,6 @@ class Slice(object):
         cx.arc(centerx, centery, radius,
                self.startAngle - math.pi/2,
                self.endAngle - math.pi/2)
-        cx.line_to(centerx, centery)
         cx.close_path()
 
     def getNormalisedAngle(self):
