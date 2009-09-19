@@ -89,6 +89,7 @@ class App(object):
         legend=dict(
             opacity=float,
             borderColor=str,
+            borderWidth=int,
             hide=bool,
             position=dict(
                 top=int,
