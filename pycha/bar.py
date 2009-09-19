@@ -89,7 +89,7 @@ class BarChart(Chart):
                     cx.rectangle(x, y, w, h)
                     cx.stroke()
 
-            if bar.yerr is not None:
+            if bar.yerr:
                 self._renderError(cx, x, y, w, h, bar.yval, bar.yerr)
 
             # render yvals above/beside bars
@@ -130,7 +130,7 @@ class VerticalBarChart(BarChart):
                     xval, yval, yerr = item
                 else:
                     xval, yval = item
-                    yerr = None
+                    yerr = 0.0
 
                 x = (((xval - self.minxval) * self.xscale)
                     + self.barMargin + (i * self.barWidthForSet))
@@ -140,7 +140,7 @@ class VerticalBarChart(BarChart):
                     y = (1.0 - h) - self.area.origin
                 else:
                     y = 1 - self.area.origin
-                rect = Rect(x, y, w, h, xval, yval, yerr, name)
+                rect = Rect(x, y, w, h, xval, yval, name)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
                     self.bars.append(rect)
@@ -203,7 +203,7 @@ class HorizontalBarChart(BarChart):
                     xval, yval, yerr = item
                 else:
                     xval, yval = item
-                    yerr = None
+                    yerr = 0.0
 
                 y = (((xval - self.minxval) * self.xscale)
                      + self.barMargin + (i * self.barWidthForSet))
@@ -213,7 +213,7 @@ class HorizontalBarChart(BarChart):
                     x = self.area.origin
                 else:
                     x = self.area.origin - w
-                rect = Rect(x, y, w, h, xval, yval, yerr, name)
+                rect = Rect(x, y, w, h, xval, yval, name, yerr)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
                     self.bars.append(rect)
@@ -292,7 +292,7 @@ class HorizontalBarChart(BarChart):
 
 class Rect(object):
 
-    def __init__(self, x, y, w, h, xval, yval, yerr, name):
+    def __init__(self, x, y, w, h, xval, yval, name, yerr=0.0):
         self.x, self.y, self.w, self.h = x, y, w, h
         self.xval, self.yval, self.yerr = xval, yval, yerr
         self.name = name
