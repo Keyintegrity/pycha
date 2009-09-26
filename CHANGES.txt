@@ -1,9 +1,9 @@
 Changes
 =======
 
-0.5.2 (unreleased)
+0.5.2 (2009-09-26)
 ------------------
-- ...
+- Add a MANIFEST.in to explictly include all files in the source distribution
 
 0.5.1 (2009-09-19)
 ------------------
