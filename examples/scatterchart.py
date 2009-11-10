@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2008 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2009 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -22,21 +22,26 @@ import cairo
 
 import pycha.scatter
 
+
 def scatterplotChart(output):
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
 
-
+    top = 50
     dataSet = (
-        ('points', [(i, random.random() * 100.0) for i in range(100)]),
+        ('points 1', [(i, random.random() * float(top)) for i in range(top)]),
+        ('points 2', [(i, random.random() * float(top)) for i in range(top)]),
+        ('points 3', [(i, random.random() * float(top)) for i in range(top)]),
+        ('points 4', [(i, random.random() * float(top)) for i in range(top)]),
+        ('points 5', [(i, random.random() * float(top)) for i in range(top)]),
         )
 
     options = {
         'background': {
             'color': '#eeeeff',
-            'lineColor': '#444444'
+            'lineColor': '#444444',
         },
         'colorScheme': {
-            'name': 'gradient',
+            'name': 'rainbow',
             'args': {
                 'initialColor': 'blue',
             },
@@ -45,8 +50,9 @@ def scatterplotChart(output):
             'hide': True,
         },
         'padding': {
-            'left': 55
-        }
+            'left': 55,
+        },
+        'title': u'Scatter plot',
     }
     chart = pycha.scatter.ScatterplotChart(surface, options)
 

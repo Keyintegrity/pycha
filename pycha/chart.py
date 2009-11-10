@@ -534,6 +534,7 @@ class Chart(object):
                                 cairo.FONT_SLANT_NORMAL,
                                 cairo.FONT_WEIGHT_BOLD)
             cx.set_font_size(self.options.titleFontSize)
+            cx.set_source_rgb(*hex2rgb(self.options.titleColor))
 
             title = unicode(self.options.title)
             extents = cx.text_extents(title)
@@ -724,6 +725,7 @@ DEFAULT_OPTIONS = Option(
             ),
     ),
     title=None,
+    titleColor='#000000',
     titleFont='Tahoma',
     titleFontSize=12,
 )
