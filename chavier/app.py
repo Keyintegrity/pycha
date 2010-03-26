@@ -67,6 +67,7 @@ class App(object):
                 rotate=float,
                 label=unicode,
                 interval=int,
+                showLines=bool,
                 ),
             y=dict(
                 hide=bool,
@@ -77,6 +78,7 @@ class App(object):
                 rotate=float,
                 label=unicode,
                 interval=int,
+                showLines=bool,
                 ),
             ),
         background=dict(
