@@ -131,6 +131,7 @@ class App(object):
                 ),
             ),
         title=unicode,
+        titleColor=str,
         titleFont=str,
         titleFontSize=int,
         )
