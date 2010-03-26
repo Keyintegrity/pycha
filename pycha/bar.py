@@ -228,9 +228,12 @@ class HorizontalBarChart(BarChart):
 
     def _renderLines(self, cx):
         """Aux function for _renderBackground"""
-        ticks = self.xticks
-        for tick in ticks:
-            self._renderLine(cx, tick, True)
+        if self.options.axis.y.showLines and self.yticks:
+            for tick in self.xticks:
+                self._renderLine(cx, tick, True)
+        if self.options.axis.x.showLines and self.xticks:
+            for tick in self.yticks:
+                self._renderLine(cx, tick, False)
 
     def _getShadowRectangle(self, x, y, w, h):
         return (x, y-2, w+2, h+4)

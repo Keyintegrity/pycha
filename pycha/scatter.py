@@ -36,7 +36,3 @@ class ScatterplotChart(LineChart):
             for point in self.points:
                 if point.name == key:
                     drawSymbol(point, self.options.stroke.width)
-
-    def _renderLines(self, cx):
-        # We don't need lines in the background
-        pass
