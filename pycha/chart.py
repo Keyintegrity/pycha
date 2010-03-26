@@ -310,9 +310,12 @@ class Chart(object):
 
     def _renderLines(self, cx):
         """Aux function for _renderBackground"""
-        ticks = self.yticks
-        for tick in ticks:
-            self._renderLine(cx, tick, False)
+        if self.options.axis.y.showLines and self.yticks:
+            for tick in self.yticks:
+                self._renderLine(cx, tick, False)
+        if self.options.axis.x.showLines and self.xticks:
+            for tick in self.xticks:
+                self._renderLine(cx, tick, True)
 
     def _renderLine(self, cx, tick, horiz):
         """Aux function for _renderLines"""
@@ -666,6 +669,7 @@ DEFAULT_OPTIONS = Option(
             rotate=None,
             label=None,
             interval=0,
+            showLines=False,
         ),
         y=Option(
             hide=False,
@@ -676,6 +680,7 @@ DEFAULT_OPTIONS = Option(
             rotate=None,
             label=None,
             interval=0,
+            showLines=True,
         ),
     ),
     background=Option(
