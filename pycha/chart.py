@@ -230,8 +230,12 @@ class Chart(object):
             interval = self.options.axis.x.interval
             label = (divmod(self.minxval, interval)[0] + 1) * interval
             pos = self.xscale * (label - self.minxval)
+            prec = self.options.axis.x.tickPrecision
             while 0.0 <= pos <= 1.0:
-                self.xticks.append((pos, label))
+                pretty_label = round(label, prec)
+                if prec == 0:
+                    pretty_label = int(pretty_label)
+                self.xticks.append((pos, pretty_label))
                 label += interval
                 pos = self.xscale * (label - self.minxval)
 
@@ -267,7 +271,10 @@ class Chart(object):
             pos = 1.0 - (self.yscale * (label - self.minyval))
             prec = self.options.axis.y.tickPrecision
             while 0.0 <= pos <= 1.0:
-                self.yticks.append((pos, round(label, prec)))
+                pretty_label = round(label, prec)
+                if prec == 0:
+                    pretty_label = int(pretty_label)
+                self.yticks.append((pos, pretty_label))
                 label += interval
                 pos = 1.0 - (self.yscale * (label - self.minyval))
 
@@ -283,7 +290,10 @@ class Chart(object):
                 yval = self.minyval + (i * roughSeparation)
                 pos = 1.0 - ((yval - self.minyval) * self.yscale)
                 if 0.0 <= pos <= 1.0:
-                    self.yticks.append((pos, round(yval, prec)))
+                    pretty_label = round(yval, prec)
+                    if prec == 0:
+                        pretty_label = int(pretty_label)
+                    self.yticks.append((pos, pretty_label))
 
     def _renderBackground(self, cx):
         """Renders the background area of the chart"""
