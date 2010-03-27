@@ -2,3 +2,5 @@ syntax: glob
 
 *.pyc
 *.egg-info
+examples/*.png
+examples/*.svg
