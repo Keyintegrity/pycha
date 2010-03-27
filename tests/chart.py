@@ -192,7 +192,7 @@ class ChartTests(unittest.TestCase):
             self.assertAlmostEqual(ch.yticks[i][0], yticks[i][0], 4)
             self.assertAlmostEqual(ch.yticks[i][1], yticks[i][1], 4)
 
-    def _test_updateExplicitTicks(self):
+    def test_updateExplicitTicks(self):
         """Test for bug #7"""
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 500, 500)
         yticks = [dict(v=i, label=str(i)) for i in range(0, 3)]
@@ -207,6 +207,47 @@ class ChartTests(unittest.TestCase):
         self.assertAlmostEqual(ch.yticks[0][0], 1.0, 4)
         self.assertAlmostEqual(ch.yticks[1][0], 2/3.0, 4)
         self.assertAlmostEqual(ch.yticks[2][0], 1/3.0, 4)
+
+    def test_updateTicksPrecission(self):
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 500, 500)
+        opt = {'axis': {'y': {'tickCount': 10, 'tickPrecission': 1}}}
+        dataset = (
+            ('dataset1', ([0, 1], [1, 1], [2, 3])),
+            ('dataset2', ([0, 2], [1, 0], [3, 4])),
+            )
+        ch = pycha.chart.Chart(surface, opt)
+        ch.addDataset(dataset)
+        ch._updateXY()
+        ch._updateTicks()
+        xticks = [(0.0, 0), (1/3.0, 1), (2/3.0, 2)]
+        for i in range(len(xticks)):
+            self.assertAlmostEqual(ch.xticks[i][0], xticks[i][0], 4)
+            self.assertAlmostEqual(ch.xticks[i][1], xticks[i][1], 4)
+
+        yticks = ((1, 0), (0.9, 0.4), (0.8, 0.8), (0.7, 1.2), (0.6, 1.6),
+                  (0.5, 2.0), (0.4, 2.4), (0.3, 2.8), (0.2, 3.2), (0.1, 3.6),
+                  (0.0, 4.0))
+        self.assertEqual(len(ch.yticks), len(yticks))
+        for i in range(len(yticks)):
+            self.assertAlmostEqual(ch.yticks[i][0], yticks[i][0], 1)
+            self.assertAlmostEqual(ch.yticks[i][1], yticks[i][1], 1)
+
+        # decrease precission to 0
+        opt = {'axis': {'y': {'tickCount': 10, 'tickPrecision': 0}}}
+        dataset = (
+            ('dataset1', ([0, 1], [1, 1], [2, 3])),
+            ('dataset2', ([0, 2], [1, 0], [3, 4])),
+            )
+        ch = pycha.chart.Chart(surface, opt)
+        ch.addDataset(dataset)
+        ch._updateXY()
+        ch._updateTicks()
+
+        yticks = ((1, 0), (0.75, 1), (0.5, 2), (0.25, 3), (0.0, 4))
+        self.assertEqual(len(ch.yticks), len(yticks))
+        for i in range(len(yticks)):
+            self.assertAlmostEqual(ch.yticks[i][0], yticks[i][0], 1, i)
+            self.assertEqual(ch.yticks[i][1], yticks[i][1], i)
 
     def test_abstractChart(self):
         ch = pycha.chart.Chart(None)
