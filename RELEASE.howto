@@ -17,12 +17,12 @@ When releasing software, the following steps should be taken:
 
      python setup.py egg_info
 
-   and inspecting ``src/EGGNAME.egg-info/PKG-INFO``.  You should also
+   and inspecting ``pycha.egg-info/PKG-INFO``.  You should also
    make sure the that the long description renders as valid
    reStructuredText.  You can do this by using the ``rst2html.py``
    utility from docutils_::
 
-     python setup.py --long-description | rst2html.py > test.html
+     python setup.py --long-description | rst2html > test.html
 
    If this will produce warnings or errors, PyPI will be unable to
    render the long description nicely.  It will treat it as plain text
