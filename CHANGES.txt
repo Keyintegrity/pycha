@@ -1,8 +1,13 @@
 Changes
 =======
-0.5.3 (unreleased)
+
+0.5.3 (2010-03-29)
 ------------------
-- ...
+- New title color option
+- Fix crash in chavier application
+- New horizontal axis lines. Options to turn it (and vertical ones) on and off
+- Improve precision in axis ticks
+- Add some examples and update old ones
 
 0.5.2 (2009-09-26)
 ------------------
