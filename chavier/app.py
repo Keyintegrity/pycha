@@ -136,6 +136,7 @@ class App(object):
         titleColor=str,
         titleFont=str,
         titleFontSize=int,
+        encoding=str,
         )
 
     def __init__(self):

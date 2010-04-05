@@ -22,6 +22,7 @@ import math
 import cairo
 
 from pycha.color import ColorScheme, hex2rgb, DEFAULT_COLOR
+from pycha.utils import safe_unicode
 
 
 class Chart(object):
@@ -368,7 +369,7 @@ class Chart(object):
                             cairo.FONT_WEIGHT_NORMAL)
         cx.set_font_size(self.options.axis.tickFontSize)
 
-        label = unicode(tick[1])
+        label = safe_unicode(tick[1], self.options.encoding)
         extents = cx.text_extents(label)
         labelWidth = extents[2]
         labelHeight = extents[3]
@@ -408,7 +409,7 @@ class Chart(object):
                             cairo.FONT_WEIGHT_NORMAL)
         cx.set_font_size(self.options.axis.tickFontSize)
 
-        label = unicode(tick[1])
+        label = safe_unicode(tick[1], self.options.encoding)
         extents = cx.text_extents(label)
         labelWidth = extents[2]
         labelHeight = extents[3]
@@ -430,7 +431,8 @@ class Chart(object):
         return label
 
     def _getTickSize(self, cx, ticks, rotate):
-        tickExtents = [cx.text_extents(unicode(tick[1]))[2:4]
+        su = lambda t: safe_unicode(t, self.options.encoding)
+        tickExtents = [cx.text_extents(su(tick[1]))[2:4]
                        for tick in ticks]
         tickWidth = tickHeight = 0.0
         if tickExtents:
@@ -471,7 +473,7 @@ class Chart(object):
         rotate = self.options.axis.y.rotate
         tickWidth, tickHeight = self._getTickSize(cx, self.yticks,
                                                   rotate)
-        label = unicode(labelText)
+        label = safe_unicode(labelText, self.options.encoding)
         x = self.area.x - tickWidth - 4.0
         y = self.area.y + 0.5 * self.area.h
         self._renderAxisLabel(cx, tickWidth, tickHeight, label, x, y,
@@ -491,7 +493,7 @@ class Chart(object):
         rotate = self.options.axis.x.rotate
         tickWidth, tickHeight = self._getTickSize(cx, self.xticks,
                                                   rotate)
-        label = unicode(labelText)
+        label = safe_unicode(labelText, self.options.encoding)
         x = self.area.x + self.area.w / 2.0
         y = self.area.y + self.area.h + tickHeight + 4.0
         self._renderAxisLabel(cx, tickWidth, tickHeight, label, x, y,
@@ -549,7 +551,7 @@ class Chart(object):
             cx.set_font_size(self.options.titleFontSize)
             cx.set_source_rgb(*hex2rgb(self.options.titleColor))
 
-            title = unicode(self.options.title)
+            title = safe_unicode(self.options.title, self.options.encoding)
             extents = cx.text_extents(title)
             titleWidth = extents[2]
 
@@ -743,4 +745,5 @@ DEFAULT_OPTIONS = Option(
     titleColor='#000000',
     titleFont='Tahoma',
     titleFontSize=12,
+    encoding='utf-8',
 )

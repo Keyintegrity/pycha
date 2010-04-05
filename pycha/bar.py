@@ -17,6 +17,7 @@
 
 from pycha.chart import Chart, uniqueIndices
 from pycha.color import hex2rgb
+from pycha.utils import safe_unicode
 
 
 class BarChart(Chart):
@@ -99,9 +100,10 @@ class BarChart(Chart):
                 cx.set_source_rgb(*hex2rgb(self.options.yvals.fontColor))
 
                 if callable(self.options.yvals.renderer):
-                    label = unicode(self.options.yvals.renderer(bar))
+                    label = safe_unicode(self.options.yvals.renderer(bar),
+                                         self.options.encoding)
                 else:
-                    label = unicode(bar.yval)
+                    label = safe_unicode(bar.yval, self.options.encoding)
                 extents = cx.text_extents(label)
                 labelW = extents[2]
                 labelH = extents[3]
