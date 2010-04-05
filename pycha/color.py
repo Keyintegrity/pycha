@@ -18,16 +18,10 @@
 
 import math
 
+from pycha.utils import clamp
+
+
 DEFAULT_COLOR = '#3c581a'
-
-
-def clamp(minValue, maxValue, value):
-    """Make sure value is between minValue and maxValue"""
-    if value < minValue:
-        return minValue
-    if value > maxValue:
-        return maxValue
-    return value
 
 
 def hex2rgb(hexstring, digits=2):

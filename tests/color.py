@@ -27,13 +27,6 @@ class SimpleColorScheme(pycha.color.ColorScheme):
 
 class ColorTests(unittest.TestCase):
 
-    def test_clamp(self):
-        self.assertEqual(pycha.color.clamp(0, 1, 2), 1)
-        self.assertEqual(pycha.color.clamp(0, 1, -1), 0)
-        self.assertEqual(pycha.color.clamp(0, 1, 0.5), 0.5)
-        self.assertEqual(pycha.color.clamp(0, 1, 1), 1)
-        self.assertEqual(pycha.color.clamp(0, 1, 0), 0)
-
     def test_hex2rgb(self):
         color = pycha.color.hex2rgb('#ff0000')
         self.assert_(isinstance(color, tuple))

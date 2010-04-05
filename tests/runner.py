@@ -22,6 +22,7 @@ import chart
 import color
 import line
 import pie
+import utils
 
 def test_suite():
     return unittest.TestSuite((
@@ -30,6 +31,7 @@ def test_suite():
         color.test_suite(),
         line.test_suite(),
         pie.test_suite(),
+        utils.test_suite(),
     ))
 
 if __name__ == '__main__':
