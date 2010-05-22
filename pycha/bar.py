@@ -139,9 +139,9 @@ class VerticalBarChart(BarChart):
                 w = self.barWidthForSet
                 h = abs(yval) * self.yscale
                 if yval > 0:
-                    y = (1.0 - h) - self.area.origin
+                    y = (1.0 - h) - self.origin
                 else:
-                    y = 1 - self.area.origin
+                    y = 1 - self.origin
                 rect = Rect(x, y, w, h, xval, yval, name)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
@@ -212,9 +212,9 @@ class HorizontalBarChart(BarChart):
                 h = self.barWidthForSet
                 w = abs(yval) * self.yscale
                 if yval > 0:
-                    x = self.area.origin
+                    x = self.origin
                 else:
-                    x = self.area.origin - w
+                    x = self.origin - w
                 rect = Rect(x, y, w, h, xval, yval, name, yerr)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
@@ -259,9 +259,9 @@ class HorizontalBarChart(BarChart):
     def _renderYAxis(self, cx):
         # draws the vertical line representing the Y axis
         cx.new_path()
-        cx.move_to(self.area.x + self.area.origin * self.area.w,
+        cx.move_to(self.area.x + self.origin * self.area.w,
                    self.area.y)
-        cx.line_to(self.area.x + self.area.origin * self.area.w,
+        cx.line_to(self.area.x + self.origin * self.area.w,
                    self.area.y + self.area.h)
         cx.close_path()
         cx.stroke()

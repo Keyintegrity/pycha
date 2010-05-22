@@ -79,9 +79,9 @@ class StackedVerticalBarChart(StackedBarChart, VerticalBarChart):
                 w = self.barWidth
                 h = abs(yval) * self.yscale
                 if yval > 0:
-                    y = (1.0 - h) - self.area.origin
+                    y = (1.0 - h) - self.origin
                 else:
-                    y = 1 - self.area.origin
+                    y = 1 - self.origin
 
                 accumulated_height = accumulated_heights.setdefault(xval, 0)
                 y -= accumulated_height
@@ -107,9 +107,9 @@ class StackedHorizontalBarChart(StackedBarChart, HorizontalBarChart):
                 h = self.barWidth
                 w = abs(yval) * self.yscale
                 if yval > 0:
-                    x = self.area.origin
+                    x = self.origin
                 else:
-                    x = self.area.origin - w
+                    x = self.origin - w
 
                 accumulated_width = accumulated_widths.setdefault(xval, 0)
                 x += accumulated_width

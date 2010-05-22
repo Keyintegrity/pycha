@@ -46,8 +46,7 @@ class AreaTests(unittest.TestCase):
         self.assertEqual(area.y, 20)
         self.assertEqual(area.w, 100)
         self.assertEqual(area.h, 300)
-        self.assertEqual(area.origin, 0.0)
-        msg = "<pycha.chart.Area@(10.00, 20.00) 100.00 x 300.00 Origin: 0.00>"
+        msg = "<pycha.chart.Area@(10.00, 20.00) 100.00 x 300.00>"
         self.assertEqual(str(area), msg)
 
 
@@ -96,6 +95,7 @@ class ChartTests(unittest.TestCase):
         self.assertEqual(ch.xticks, [])
         self.assertEqual(ch.yticks, [])
         self.assertEqual(ch.options, pycha.chart.DEFAULT_OPTIONS)
+        self.assertEqual(ch.origin, 0.0)
 
     def test_datasets(self):
         ch = pycha.chart.Chart(None)

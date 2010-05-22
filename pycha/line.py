@@ -49,7 +49,7 @@ class LineChart(Chart):
             if self.options.shouldFill:
                 # Go to the (0,0) coordinate to start drawing the area
                 #cx.move_to(self.area.x, self.area.y + self.area.h)
-                offset = (1.0 - self.area.origin) * self.area.h
+                offset = (1.0 - self.origin) * self.area.h
                 cx.move_to(self.area.x, self.area.y + offset)
 
             for point in self.points:
@@ -68,7 +68,7 @@ class LineChart(Chart):
 
             if self.options.shouldFill:
                 # Close the path to the start point
-                y = (1.0 - self.area.origin) * self.area.h + self.area.y
+                y = (1.0 - self.origin) * self.area.h + self.area.y
                 cx.line_to(lastX * self.area.w + self.area.x, y)
                 cx.line_to(self.area.x, y)
                 cx.close_path()

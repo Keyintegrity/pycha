@@ -45,6 +45,7 @@ class Chart(object):
         self.yscale = 1.0
         self.xrange = None
         self.yrange = None
+        self.origin = 0.0
 
         self.xticks = []
         self.yticks = []
@@ -185,6 +186,11 @@ class Chart(object):
         else:
             self.yscale = 1.0 / self.yrange
 
+        if self.minyval * self.maxyval < 0: # different signs
+            self.origin = abs(self.minyval) * self.yscale
+        else:
+            self.origin = 0.0
+
         # calculate area data
         surface_width, surface_height = self.getSurfaceSize()
         width = (surface_width
@@ -192,14 +198,8 @@ class Chart(object):
         height = (surface_height
                   - self.options.padding.top - self.options.padding.bottom)
 
-        if self.minyval * self.maxyval < 0: # different signs
-            origin = abs(self.minyval) * self.yscale
-        else:
-            origin = 0
-
-        self.area = Area(self.options.padding.left,
-                         self.options.padding.top,
-                         width, height, origin)
+        self.area = Area(self.options.padding.left, self.options.padding.top,
+                         width, height)
 
     def _updateChart(self):
         raise NotImplementedError
@@ -504,9 +504,9 @@ class Chart(object):
         """Draws the horizontal line representing the X axis"""
         cx.new_path()
         cx.move_to(self.area.x,
-                   self.area.y + self.area.h * (1.0 - self.area.origin))
+                   self.area.y + self.area.h * (1.0 - self.origin))
         cx.line_to(self.area.x + self.area.w,
-                   self.area.y + self.area.h * (1.0 - self.area.origin))
+                   self.area.y + self.area.h * (1.0 - self.origin))
         cx.close_path()
         cx.stroke()
 
@@ -633,13 +633,12 @@ def uniqueIndices(arr):
 class Area(object):
     """Simple rectangle to hold an area coordinates and dimensions"""
 
-    def __init__(self, x, y, w, h, origin=0.0):
+    def __init__(self, x, y, w, h):
         self.x, self.y, self.w, self.h = x, y, w, h
-        self.origin = origin
 
     def __str__(self):
-        msg = "<pycha.chart.Area@(%.2f, %.2f) %.2f x %.2f Origin: %.2f>"
-        return  msg % (self.x, self.y, self.w, self.h, self.origin)
+        msg = "<pycha.chart.Area@(%.2f, %.2f) %.2f x %.2f>"
+        return  msg % (self.x, self.y, self.w, self.h)
 
 
 class Option(dict):
