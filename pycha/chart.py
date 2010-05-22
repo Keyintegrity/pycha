@@ -101,6 +101,17 @@ class Chart(object):
             self._initSurface(surface)
 
         cx = cairo.Context(self.surface)
+
+        # calculate area data
+        surface_width, surface_height = self.getSurfaceSize()
+        width = (surface_width
+                 - self.options.padding.left - self.options.padding.right)
+        height = (surface_height
+                  - self.options.padding.top - self.options.padding.bottom)
+
+        self.area = Area(self.options.padding.left, self.options.padding.top,
+                         width, height)
+
         self._renderBackground(cx)
         self._renderChart(cx)
         self._renderAxis(cx)
@@ -190,16 +201,6 @@ class Chart(object):
             self.origin = abs(self.minyval) * self.yscale
         else:
             self.origin = 0.0
-
-        # calculate area data
-        surface_width, surface_height = self.getSurfaceSize()
-        width = (surface_width
-                 - self.options.padding.left - self.options.padding.right)
-        height = (surface_height
-                  - self.options.padding.top - self.options.padding.bottom)
-
-        self.area = Area(self.options.padding.left, self.options.padding.top,
-                         width, height)
 
     def _updateChart(self):
         raise NotImplementedError
