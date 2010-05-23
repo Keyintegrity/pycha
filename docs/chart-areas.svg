@@ -300,9 +300,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="394.6763"
-     inkscape:cy="324.17961"
+     inkscape:zoom="1.4"
+     inkscape:cx="396.19153"
+     inkscape:cy="803.50516"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -329,6 +329,148 @@
      inkscape:label="Capa 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <g
+       id="g2924"
+       transform="matrix(1,0,0,0.78555401,0,22.919343)">
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="106.87596"
+         x="161.707"
+         height="216.40396"
+         width="40.444859"
+         id="rect786"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#295b29;fill-opacity:1;stroke:none" />
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="106.87596"
+         x="161.707"
+         height="216.40396"
+         width="8.6250534"
+         id="rect786-4"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none" />
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="106.87596"
+         x="193.52681"
+         height="216.40396"
+         width="8.6250534"
+         id="rect786-4-3"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       id="g2919"
+       transform="matrix(1,0,0,0.89975358,0,10.714154)">
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="106.87596"
+         x="202.0928"
+         height="188.93729"
+         width="33.121246"
+         id="rect786-0-1"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#007300;fill-opacity:1;stroke:none" />
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="106.87596"
+         x="202.0928"
+         height="188.93729"
+         width="8.372509"
+         id="rect786-0-1-7"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none" />
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="106.87596"
+         x="226.84154"
+         height="188.93729"
+         width="8.372509"
+         id="rect786-0-1-7-8"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       id="g2929"
+       transform="matrix(0.94673044,0,0,1,32.72308,0)">
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="295.50903"
+         x="235.33829"
+         height="28.027164"
+         width="378.95581"
+         id="rect786-0-1-2"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#009800;fill-opacity:1;stroke:none" />
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="316.21716"
+         x="235.33829"
+         height="7.3190374"
+         width="378.95581"
+         id="rect786-0-1-2-6"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none" />
+      <rect
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="295.50903"
+         x="235.33829"
+         height="7.3190374"
+         width="378.95581"
+         id="rect786-0-1-2-6-3"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       id="g2938"
+       transform="matrix(0.87039392,0,0,1,79.616139,0)">
+      <rect
+         transform="scale(1,-1)"
+         inkscape:export-ydpi="72.110001"
+         inkscape:export-xdpi="72.110001"
+         inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+         y="-348.26648"
+         x="202.10258"
+         height="24.975187"
+         width="412.19153"
+         id="rect786-1"
+         style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#295b29;fill-opacity:1;stroke:none" />
+      <g
+         id="g2934">
+        <rect
+           style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none"
+           id="rect786-1-4"
+           width="412.19153"
+           height="6.287365"
+           x="202.10258"
+           y="-348.26648"
+           inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+           inkscape:export-xdpi="72.110001"
+           inkscape:export-ydpi="72.110001"
+           transform="scale(1,-1)" />
+        <rect
+           style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none"
+           id="rect786-1-4-3"
+           width="412.19153"
+           height="6.287365"
+           x="202.10258"
+           y="-329.57864"
+           inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
+           inkscape:export-xdpi="72.110001"
+           inkscape:export-ydpi="72.110001"
+           transform="scale(1,-1)" />
+      </g>
+    </g>
     <rect
        style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:none;stroke:#000000;stroke-width:0.89213771;stroke-opacity:1"
        id="rect12"
@@ -336,16 +478,6 @@
        height="330.81348"
        x="131.42224"
        y="53.399632"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#295b29;fill-opacity:1;stroke:none"
-       id="rect786"
-       width="40.444859"
-       height="216.40396"
-       x="161.707"
-       y="106.87596"
        inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
        inkscape:export-xdpi="72.110001"
        inkscape:export-ydpi="72.110001" />
@@ -375,17 +507,6 @@
          x="219.16931"
          y="-632.06842"
          id="tspan861">pad_right</tspan></text>
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#295b29;fill-opacity:1;stroke:none"
-       id="rect786-1"
-       width="412.19153"
-       height="24.975187"
-       x="202.10258"
-       y="-348.26648"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001"
-       transform="scale(1,-1)" />
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -643,16 +764,6 @@
          id="tspan858"
          x="369.7963"
          y="96.505035">title_area</tspan></text>
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#007300;fill-opacity:1;stroke:none"
-       id="rect786-0-1"
-       width="33.121246"
-       height="188.93729"
-       x="202.0928"
-       y="106.87596"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -717,16 +828,6 @@
          id="tspan818-2"
          x="427.32227"
          y="289.73288">x_ticks_area</tspan></text>
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#009800;fill-opacity:1;stroke:none"
-       id="rect786-0-1-2"
-       width="378.95581"
-       height="28.027164"
-       x="235.33829"
-       y="295.50903"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -761,87 +862,5 @@
        inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
        inkscape:export-xdpi="72.110001"
        inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none"
-       id="rect786-4"
-       width="8.6250534"
-       height="216.40396"
-       x="161.707"
-       y="106.87596"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none"
-       id="rect786-4-3"
-       width="8.6250534"
-       height="216.40396"
-       x="193.52681"
-       y="106.87596"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none"
-       id="rect786-0-1-7"
-       width="8.372509"
-       height="188.93729"
-       x="202.0928"
-       y="106.87596"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none"
-       id="rect786-0-1-7-8"
-       width="8.372509"
-       height="188.93729"
-       x="226.84154"
-       y="106.87596"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none"
-       id="rect786-0-1-2-6"
-       width="378.95581"
-       height="7.3190374"
-       x="235.33829"
-       y="316.21716"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none"
-       id="rect786-1-4"
-       width="412.19153"
-       height="6.287365"
-       x="202.10258"
-       y="-348.26648"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001"
-       transform="scale(1,-1)" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#00b000;fill-opacity:1;stroke:none"
-       id="rect786-0-1-2-6-3"
-       width="378.95581"
-       height="7.3190374"
-       x="235.33829"
-       y="295.50903"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001" />
-    <rect
-       style="text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#3b833b;fill-opacity:1;stroke:none"
-       id="rect786-1-4-3"
-       width="412.19153"
-       height="6.287365"
-       x="202.10258"
-       y="-329.57864"
-       inkscape:export-filename="/home/lgs/proyectos/pycha/docs/figure3.png"
-       inkscape:export-xdpi="72.110001"
-       inkscape:export-ydpi="72.110001"
-       transform="scale(1,-1)" />
   </g>
 </svg>
