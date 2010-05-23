@@ -64,10 +64,10 @@ class BarChart(Chart):
             cx.set_line_width(ux)
 
             # gather bar proportions
-            x = self.area.x + self.area.w * bar.x
-            y = self.area.y + self.area.h * bar.y
-            w = self.area.w * bar.w
-            h = self.area.h * bar.h
+            x = self.chart_area.x + self.chart_area.w * bar.x
+            y = self.chart_area.y + self.chart_area.h * bar.y
+            w = self.chart_area.w * bar.w
+            h = self.chart_area.h * bar.h
 
             if (w < 1 or h < 1) and self.options.yvals.skipSmallValues:
                 return # don't draw when the bar is too small
@@ -247,8 +247,9 @@ class HorizontalBarChart(BarChart):
     def _renderXAxis(self, cx):
         """Draws the horizontal line representing the X axis"""
         cx.new_path()
-        cx.move_to(self.area.x, self.area.y + self.area.h)
-        cx.line_to(self.area.x + self.area.w, self.area.y + self.area.h)
+        cx.move_to(self.chart_area.x, self.chart_area.y + self.chart_area.h)
+        cx.line_to(self.chart_area.x + self.chart_area.w,
+                   self.chart_area.y + self.chart_area.h)
         cx.close_path()
         cx.stroke()
 
@@ -259,10 +260,10 @@ class HorizontalBarChart(BarChart):
     def _renderYAxis(self, cx):
         # draws the vertical line representing the Y axis
         cx.new_path()
-        cx.move_to(self.area.x + self.origin * self.area.w,
-                   self.area.y)
-        cx.line_to(self.area.x + self.origin * self.area.w,
-                   self.area.y + self.area.h)
+        cx.move_to(self.chart_area.x + self.origin * self.chart_area.w,
+                   self.chart_area.y)
+        cx.line_to(self.chart_area.x + self.origin * self.chart_area.w,
+                   self.chart_area.y + self.chart_area.h)
         cx.close_path()
         cx.stroke()
 

@@ -23,6 +23,7 @@ import pycha.bar
 
 from lines import lines
 
+
 def barChart(output, chartFactory):
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
 
@@ -58,8 +59,8 @@ def barChart(output, chartFactory):
             'hide': True,
         },
         'padding': {
-            'left': 75,
-            'bottom': 55,
+            'left': 0,
+            'bottom': 0,
         },
         'title': 'Sample Chart'
     }
