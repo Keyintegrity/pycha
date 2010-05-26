@@ -36,7 +36,7 @@ class Chart(object):
         self.datasets = []
 
         # computed values used in several methods
-        self.area = None # chart area without padding or text labels
+        self.layout = Layout()
         self.minxval = None
         self.maxxval = None
         self.minyval = None
@@ -104,91 +104,11 @@ class Chart(object):
 
         # calculate area data
         surface_width, surface_height = self.getSurfaceSize()
-        width = (surface_width
-                 - self.options.padding.left - self.options.padding.right)
-        height = (surface_height
-                  - self.options.padding.top - self.options.padding.bottom)
-
-        self.title_area = Area(self.options.padding.left,
-                               self.options.padding.top,
-                               surface_width - (self.options.padding.left
-                                                + self.options.padding.right),
-                               self._getTitleHeight(cx))
-
-        y_axis_label_width = self._getYAxisLabelWidth(cx)
-        x_axis_label_height = self._getXAxisLabelHeight(cx)
-        y_axis_tick_labels_width = self._getYAxisTickLabelsWidth(cx)
-        x_axis_tick_labels_height = self._getXAxisTickLabelsHeight(cx)
-
-        self.y_label_area = Area(self.options.padding.left,
-                                 self.options.padding.top + self.title_area.h,
-                                 y_axis_label_width,
-                                 surface_height - (self.options.padding.bottom
-                                                   + self.options.padding.top
-                                                   + x_axis_label_height
-                                                   + x_axis_tick_labels_height
-                                                   + self.options.axis.tickSize
-                                                   + self.title_area.h))
-        self.x_label_area = Area(self.options.padding.left
-                                 + y_axis_label_width
-                                 + y_axis_tick_labels_width
-                                 + self.options.axis.tickSize,
-                                 surface_height - (self.options.padding.bottom
-                                                   + x_axis_label_height),
-                                 surface_width - (self.options.padding.left
-                                                  + self.options.padding.right
-                                                  + self.options.axis.tickSize
-                                                  + y_axis_label_width
-                                                  + y_axis_tick_labels_width),
-                                 x_axis_label_height)
-
-        self.y_tick_labels_area = Area(self.y_label_area.x
-                                       + self.y_label_area.w,
-                                       self.y_label_area.y,
-                                       y_axis_tick_labels_width,
-                                       self.y_label_area.h)
-        self.x_tick_labels_area = Area(self.x_label_area.x,
-                                       self.x_label_area.y
-                                       - x_axis_tick_labels_height,
-                                       self.x_label_area.w,
-                                       x_axis_tick_labels_height)
-
-        self.y_ticks_area = Area(self.y_tick_labels_area.x
-                                 + self.y_tick_labels_area.w,
-                                 self.y_tick_labels_area.y,
-                                 self.options.axis.tickSize,
-                                 self.y_label_area.h)
-        self.x_ticks_area = Area(self.x_tick_labels_area.x,
-                                 self.x_tick_labels_area.y
-                                 - self.options.axis.tickSize,
-                                 self.x_label_area.w,
-                                 self.options.axis.tickSize)
-        self.chart_area = Area(self.y_ticks_area.x + self.y_ticks_area.w,
-                               self.title_area.y + self.title_area.h,
-                               self.x_ticks_area.w,
-                               self.y_ticks_area.h)
-
-        self.area = Area(self.options.padding.left, self.options.padding.top,
-                         width, height)
+        self.layout.update(cx, self.options, surface_width, surface_height,
+                           self.xticks, self.yticks)
 
         self._renderBackground(cx)
-
-        def draw_area(area, r, g, b):
-            cx.rectangle(area.x, area.y, area.w, area.h)
-            cx.set_source_rgba(r, g, b, 0.5)
-            cx.fill()
-
-        cx.save()
-        draw_area(self.title_area, 1, 126/255.0, 0)
-        draw_area(self.y_label_area, 41/255.0, 91/255.0, 41/255.0)
-        draw_area(self.x_label_area, 41/255.0, 91/255.0, 41/255.0)
-        draw_area(self.y_tick_labels_area, 0, 115/255.0, 0)
-        draw_area(self.x_tick_labels_area, 0, 115/255.0, 0)
-        draw_area(self.y_ticks_area, 229/255.0, 241/255.0, 18/255.0)
-        draw_area(self.x_ticks_area, 229/255.0, 241/255.0, 18/255.0)
-        draw_area(self.chart_area, 75/255.0, 75/255.0, 1.0)
-        cx.restore()
-
+        self.layout.render(cx)
         self._renderChart(cx)
         self._renderAxis(cx)
         self._renderTitle(cx)
@@ -386,7 +306,12 @@ class Chart(object):
 
         if self.options.background.chartColor:
             cx.set_source_rgb(*hex2rgb(self.options.background.chartColor))
-            cx.rectangle(self.area.x, self.area.y, self.area.w, self.area.h)
+            surface_width, surface_height = self.getSurfaceSize()
+            cx.rectangle(self.options.padding.left, self.options.padding.top,
+                         surface_width - (self.options.padding.left
+                                          + self.options.padding.right),
+                         surface_height - (self.options.padding.top
+                                           + self.options.padding.bottom))
             cx.fill()
 
         if self.options.background.lineColor:
@@ -409,13 +334,13 @@ class Chart(object):
         """Aux function for _renderLines"""
         x1, x2, y1, y2 = (0, 0, 0, 0)
         if horiz:
-            x1 = x2 = tick[0] * self.chart_area.w + self.chart_area.x
-            y1 = self.chart_area.y
-            y2 = y1 + self.chart_area.h
+            x1 = x2 = tick[0] * self.layout.chart.w + self.layout.chart.x
+            y1 = self.layout.chart.y
+            y2 = y1 + self.layout.chart.h
         else:
-            x1 = self.chart_area.x
-            x2 = x1 + self.chart_area.w
-            y1 = y2 = tick[0] * self.chart_area.h + self.chart_area.y
+            x1 = self.layout.chart.x
+            x2 = x1 + self.layout.chart.w
+            y1 = y2 = tick[0] * self.layout.chart.h + self.layout.chart.y
 
         cx.new_path()
         cx.move_to(x1, y1)
@@ -432,8 +357,8 @@ class Chart(object):
         if callable(tick):
             return
 
-        x = self.y_ticks_area.x + self.y_ticks_area.w
-        y = self.y_ticks_area.y + tick[0] * self.y_ticks_area.h
+        x = self.layout.y_ticks.x + self.layout.y_ticks.w
+        y = self.layout.y_ticks.y + tick[0] * self.layout.y_ticks.h
 
         cx.new_path()
         cx.move_to(x, y)
@@ -472,8 +397,8 @@ class Chart(object):
         if callable(tick):
             return
 
-        x = self.x_ticks_area.x + tick[0] * self.x_ticks_area.w
-        y = self.x_ticks_area.y
+        x = self.layout.x_ticks.x + tick[0] * self.layout.x_ticks.w
+        y = self.layout.x_ticks.y
 
         cx.new_path()
         cx.move_to(x, y)
@@ -507,26 +432,6 @@ class Chart(object):
             cx.show_text(label)
         return label
 
-    def _getTickSize(self, cx, ticks, rotate):
-        su = lambda t: safe_unicode(t, self.options.encoding)
-        tickExtents = [cx.text_extents(su(tick[1]))[2:4]
-                       for tick in ticks]
-        tickWidth = tickHeight = 0.0
-        if tickExtents:
-            tickHeight = self.options.axis.tickSize + 4.0
-            tickWidth = self.options.axis.tickSize + 4.0
-            widths, heights = zip(*tickExtents)
-            maxWidth, maxHeight = max(widths), max(heights)
-            if rotate:
-                radians = math.radians(rotate)
-                sinRadians = math.sin(radians)
-                cosRadians = math.cos(radians)
-                maxHeight = maxWidth * sinRadians + maxHeight * cosRadians
-                maxWidth = maxWidth * cosRadians + maxHeight * sinRadians
-            tickWidth += maxWidth
-            tickHeight += maxHeight
-        return tickWidth, tickHeight
-
     def _renderAxisLabel(self, cx, label, x, y, vertical=False):
         cx.select_font_face(self.options.axis.labelFont,
                             cairo.FONT_SLANT_NORMAL,
@@ -543,124 +448,45 @@ class Chart(object):
 
         cx.show_text(label)
 
-    def _getYAxisLabelWidth(self, cx):
-        if self.options.axis.y.label:
-            cx.save()
-            cx.select_font_face(self.options.axis.labelFont,
-                                cairo.FONT_SLANT_NORMAL,
-                                cairo.FONT_WEIGHT_BOLD)
-            cx.set_font_size(self.options.axis.labelFontSize)
-            extents = cx.text_extents(self.options.axis.y.label)
-            cx.restore()
-            return extents[3]
-        return 0.0
-
     def _renderYAxisLabel(self, cx, label_text):
         cx.save()
-        cx.rectangle(self.y_label_area.x, self.y_label_area.y,
-                     self.y_label_area.w, self.y_label_area.h)
+        cx.rectangle(self.layout.y_label.x, self.layout.y_label.y,
+                     self.layout.y_label.w, self.layout.y_label.h)
         cx.clip()
         label = safe_unicode(label_text, self.options.encoding)
-        x = self.y_label_area.x
-        y = self.y_label_area.y + self.y_label_area.h / 2.0
+        x = self.layout.y_label.x
+        y = self.layout.y_label.y + self.layout.y_label.h / 2.0
         self._renderAxisLabel(cx, label, x, y, True)
         cx.restore()
 
     def _renderYAxis(self, cx):
         """Draws the vertical line represeting the Y axis"""
         cx.new_path()
-        cx.move_to(self.chart_area.x, self.chart_area.y)
-        cx.line_to(self.chart_area.x, self.chart_area.y + self.chart_area.h)
+        cx.move_to(self.layout.chart.x, self.layout.chart.y)
+        cx.line_to(self.layout.chart.x,
+                   self.layout.chart.y + self.layout.chart.h)
         cx.close_path()
         cx.stroke()
 
-    def _getXAxisLabelHeight(self, cx):
-        if self.options.axis.x.label:
-            cx.save()
-            cx.select_font_face(self.options.axis.labelFont,
-                                cairo.FONT_SLANT_NORMAL,
-                                cairo.FONT_WEIGHT_BOLD)
-            cx.set_font_size(self.options.axis.labelFontSize)
-            extents = cx.text_extents(self.options.axis.x.label)
-            cx.restore()
-            return extents[3]
-
-        return 0.0
-
     def _renderXAxisLabel(self, cx, label_text):
         cx.save()
-        cx.rectangle(self.x_label_area.x, self.x_label_area.y,
-                     self.x_label_area.w, self.x_label_area.h)
+        cx.rectangle(self.layout.x_label.x, self.layout.x_label.y,
+                     self.layout.x_label.w, self.layout.x_label.h)
         cx.clip()
         label = safe_unicode(label_text, self.options.encoding)
-        x = self.x_label_area.x + self.x_label_area.w / 2.0
-        y = self.x_label_area.y
+        x = self.layout.x_label.x + self.layout.x_label.w / 2.0
+        y = self.layout.x_label.y
         self._renderAxisLabel(cx, label, x, y, False)
         cx.restore()
 
     def _renderXAxis(self, cx):
         """Draws the horizontal line representing the X axis"""
         cx.new_path()
-        cx.move_to(self.chart_area.x,
-                   self.chart_area.y + self.chart_area.h * (1.0 - self.origin))
-        cx.line_to(self.chart_area.x + self.chart_area.w,
-                   self.chart_area.y + self.chart_area.h * (1.0 - self.origin))
+        y = self.layout.chart.y + (1.0 - self.origin) * self.layout.chart.h
+        cx.move_to(self.layout.chart.x, y)
+        cx.line_to(self.layout.chart.x + self.layout.chart.w, y)
         cx.close_path()
         cx.stroke()
-
-    def _getXAxisTickLabelsHeight(self, cx):
-        cx.save()
-        cx.select_font_face(self.options.axis.tickFont,
-                            cairo.FONT_SLANT_NORMAL,
-                            cairo.FONT_WEIGHT_NORMAL)
-        cx.set_font_size(self.options.axis.tickFontSize)
-
-        max_width = max_height = 0.0
-        if not self.options.axis.x.hide:
-            extents = [cx.text_extents(safe_unicode(
-                        tick[1], self.options.encoding,
-                        ))[2:4] # get width and height as a tuple
-                      for tick in self.xticks]
-            if extents:
-                widths, heights = zip(*extents)
-                max_width, max_height = max(widths), max(heights)
-                if self.options.axis.x.rotate:
-                    radians = math.radians(self.options.axis.x.rotate)
-                    sinRadians = math.sin(radians)
-                    cosRadians = math.cos(radians)
-                    max_height = (max_width * sinRadians
-                                  + max_height * cosRadians)
-                    max_width = (max_width * cosRadians
-                                 + max_height * sinRadians)
-        cx.restore()
-        return max_height
-
-    def _getYAxisTickLabelsWidth(self, cx):
-        cx.save()
-        cx.select_font_face(self.options.axis.tickFont,
-                            cairo.FONT_SLANT_NORMAL,
-                            cairo.FONT_WEIGHT_NORMAL)
-        cx.set_font_size(self.options.axis.tickFontSize)
-
-        max_width = max_height = 0.0
-        if not self.options.axis.y.hide:
-            extents = [cx.text_extents(safe_unicode(
-                        tick[1], self.options.encoding,
-                        ))[2:4] # get width and height as a tuple
-                      for tick in self.yticks]
-            if extents:
-                widths, heights = zip(*extents)
-                max_width, max_height = max(widths), max(heights)
-                if self.options.axis.y.rotate:
-                    radians = math.radians(self.options.axis.y.rotate)
-                    sinRadians = math.sin(radians)
-                    cosRadians = math.cos(radians)
-                    max_height = (max_width * sinRadians
-                                  + max_height * cosRadians)
-                    max_width = (max_width * cosRadians
-                                 + max_height * sinRadians)
-        cx.restore()
-        return max_width
 
     def _renderAxis(self, cx):
         """Renders axis"""
@@ -674,10 +500,11 @@ class Chart(object):
         if not self.options.axis.y.hide:
             if self.yticks:
                 cx.save()
-                cx.rectangle(self.y_tick_labels_area.x,
-                             self.y_tick_labels_area.y,
-                             self.y_tick_labels_area.w + self.y_ticks_area.w,
-                             self.y_tick_labels_area.h)
+                cx.rectangle(self.layout.y_tick_labels.x,
+                             self.layout.y_tick_labels.y,
+                             self.layout.y_tick_labels.w
+                             + self.layout.y_ticks.w,
+                             self.layout.y_tick_labels.h)
                 cx.clip()
                 for tick in self.yticks:
                     self._renderYTick(cx, tick)
@@ -692,9 +519,10 @@ class Chart(object):
             font_ascent = cx.font_extents()[0]
             if self.xticks:
                 cx.save()
-                cx.rectangle(self.x_ticks_area.x, self.x_ticks_area.y,
-                             self.x_ticks_area.w,
-                             self.x_ticks_area.h + self.x_tick_labels_area.h)
+                cx.rectangle(self.layout.x_ticks.x, self.layout.x_ticks.y,
+                             self.layout.x_ticks.w,
+                             self.layout.x_ticks.h
+                             + self.layout.x_tick_labels.h)
                 cx.clip()
                 for tick in self.xticks:
                     self._renderXTick(cx, tick, font_ascent)
@@ -707,24 +535,11 @@ class Chart(object):
 
         cx.restore()
 
-    def _getTitleHeight(self, cx):
-        if self.options.title:
-            cx.save()
-            cx.select_font_face(self.options.titleFont,
-                                cairo.FONT_SLANT_NORMAL,
-                                cairo.FONT_WEIGHT_BOLD)
-            cx.set_font_size(self.options.titleFontSize)
-            title = safe_unicode(self.options.title, self.options.encoding)
-            extents = cx.text_extents(title)
-            cx.restore()
-            return extents[3]
-        return 0.0
-
     def _renderTitle(self, cx):
         if self.options.title:
             cx.save()
-            cx.rectangle(self.title_area.x, self.title_area.y,
-                         self.title_area.w, self.title_area.h)
+            cx.rectangle(self.layout.title.x, self.layout.title.y,
+                         self.layout.title.w, self.layout.title.h)
             cx.clip()
             cx.select_font_face(self.options.titleFont,
                                 cairo.FONT_SLANT_NORMAL,
@@ -736,8 +551,10 @@ class Chart(object):
             extents = cx.text_extents(title)
             title_width = extents[2]
 
-            x = self.title_area.x + self.title_area.w / 2.0 - title_width / 2.0
-            y = self.title_area.y + cx.font_extents()[0] # font ascent
+            x = (self.layout.title.x
+                 + self.layout.title.w / 2.0
+                 - title_width / 2.0)
+            y = self.layout.title.y + cx.font_extents()[0] # font ascent
 
             cx.move_to(x, y)
             cx.show_text(title)
@@ -814,12 +631,155 @@ def uniqueIndices(arr):
 class Area(object):
     """Simple rectangle to hold an area coordinates and dimensions"""
 
-    def __init__(self, x, y, w, h):
+    def __init__(self, x=0.0, y=0.0, w=0.0, h=0.0):
         self.x, self.y, self.w, self.h = x, y, w, h
 
     def __str__(self):
         msg = "<pycha.chart.Area@(%.2f, %.2f) %.2f x %.2f>"
         return  msg % (self.x, self.y, self.w, self.h)
+
+
+def get_text_extents(cx, text, font, font_size, encoding):
+    if text:
+        cx.save()
+        cx.select_font_face(font,
+                            cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cx.set_font_size(font_size)
+        safe_text = safe_unicode(text, encoding)
+        extents = cx.text_extents(safe_text)
+        cx.restore()
+        return extents[2:4]
+    return (0.0, 0.0)
+
+
+class Layout(object):
+    """Set of chart areas"""
+
+    def __init__(self):
+        self.title = Area()
+        self.x_label = Area()
+        self.y_label = Area()
+        self.x_tick_labels = Area()
+        self.y_tick_labels = Area()
+        self.x_ticks = Area()
+        self.y_ticks = Area()
+        self.chart = Area()
+
+    def update(self, cx, options, width, height, xticks, yticks):
+        self.title.x = options.padding.left
+        self.title.y = options.padding.top
+        self.title.w = width - (options.padding.left + options.padding.right)
+        self.title.h = get_text_extents(cx,
+                                        options.title,
+                                        options.titleFont,
+                                        options.titleFontSize,
+                                        options.encoding)[1]
+        x_axis_label_height = get_text_extents(cx,
+                                               options.axis.x.label,
+                                               options.axis.labelFont,
+                                               options.axis.labelFontSize,
+                                               options.encoding)[1]
+        y_axis_label_width = get_text_extents(cx,
+                                              options.axis.y.label,
+                                              options.axis.labelFont,
+                                              options.axis.labelFontSize,
+                                              options.encoding)[1]
+        x_axis_tick_labels_height = self._getAxisTickLabelsSize(cx, options,
+                                                                xticks)[1]
+        y_axis_tick_labels_width = self._getAxisTickLabelsSize(cx, options,
+                                                               yticks)[0]
+
+        self.y_label.x = options.padding.left
+        self.y_label.y = options.padding.top + self.title.h
+        self.y_label.w = y_axis_label_width
+        self.y_label.h = height - (options.padding.bottom
+                                   + options.padding.top
+                                   + x_axis_label_height
+                                   + x_axis_tick_labels_height
+                                   + options.axis.tickSize
+                                   + self.title.h)
+        self.x_label.x = (options.padding.left
+                          + y_axis_label_width
+                          + y_axis_tick_labels_width
+                          + options.axis.tickSize)
+        self.x_label.y = height - (options.padding.bottom
+                                   + x_axis_label_height)
+        self.x_label.w = width - (options.padding.left
+                                  + options.padding.right
+                                  + options.axis.tickSize
+                                  + y_axis_label_width
+                                  + y_axis_tick_labels_width)
+        self.x_label.h = x_axis_label_height
+
+        self.y_tick_labels.x = self.y_label.x + self.y_label.w
+        self.y_tick_labels.y = self.y_label.y
+        self.y_tick_labels.w = y_axis_tick_labels_width
+        self.y_tick_labels.h = self.y_label.h
+
+        self.x_tick_labels.x = self.x_label.x
+        self.x_tick_labels.y = self.x_label.y - x_axis_tick_labels_height
+        self.x_tick_labels.w = self.x_label.w
+        self.x_tick_labels.h = x_axis_tick_labels_height
+
+        self.y_ticks.x = self.y_tick_labels.x + self.y_tick_labels.w
+        self.y_ticks.y = self.y_tick_labels.y
+        self.y_ticks.w = options.axis.tickSize
+        self.y_ticks.h = self.y_label.h
+
+        self.x_ticks.x = self.x_tick_labels.x
+        self.x_ticks.y = self.x_tick_labels.y - options.axis.tickSize
+        self.x_ticks.w = self.x_label.w
+        self.x_ticks.h = options.axis.tickSize
+
+        self.chart.x = self.y_ticks.x + self.y_ticks.w
+        self.chart.y = self.title.y + self.title.h
+        self.chart.w = self.x_ticks.w
+        self.chart.h = self.y_ticks.h
+
+    def render(self, cx):
+
+        def draw_area(area, r, g, b):
+            cx.rectangle(area.x, area.y, area.w, area.h)
+            cx.set_source_rgba(r, g, b, 0.5)
+            cx.fill()
+
+        cx.save()
+        draw_area(self.title, 1, 126/255.0, 0)
+        draw_area(self.y_label, 41/255.0, 91/255.0, 41/255.0)
+        draw_area(self.x_label, 41/255.0, 91/255.0, 41/255.0)
+        draw_area(self.y_tick_labels, 0, 115/255.0, 0)
+        draw_area(self.x_tick_labels, 0, 115/255.0, 0)
+        draw_area(self.y_ticks, 229/255.0, 241/255.0, 18/255.0)
+        draw_area(self.x_ticks, 229/255.0, 241/255.0, 18/255.0)
+        draw_area(self.chart, 75/255.0, 75/255.0, 1.0)
+        cx.restore()
+
+    def _getAxisTickLabelsSize(self, cx, options, ticks):
+        cx.save()
+        cx.select_font_face(options.axis.tickFont,
+                            cairo.FONT_SLANT_NORMAL,
+                            cairo.FONT_WEIGHT_NORMAL)
+        cx.set_font_size(options.axis.tickFontSize)
+
+        max_width = max_height = 0.0
+        if not options.axis.y.hide:
+            extents = [cx.text_extents(safe_unicode(
+                        tick[1], options.encoding,
+                        ))[2:4] # get width and height as a tuple
+                       for tick in ticks]
+            if extents:
+                widths, heights = zip(*extents)
+                max_width, max_height = max(widths), max(heights)
+                if options.axis.y.rotate:
+                    radians = math.radians(options.axis.y.rotate)
+                    sinRadians = math.sin(radians)
+                    cosRadians = math.cos(radians)
+                    max_height = (max_width * sinRadians
+                                  + max_height * cosRadians)
+                    max_width = (max_width * cosRadians
+                                 + max_height * sinRadians)
+        cx.restore()
+        return max_width, max_height
 
 
 class Option(dict):

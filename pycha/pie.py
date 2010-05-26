@@ -34,10 +34,10 @@ class PieChart(Chart):
 
     def _updateChart(self):
         """Evaluates measures for pie charts"""
-        self.centerx = self.area.x + self.area.w * 0.5
-        self.centery = self.area.y + self.area.h * 0.5
-        self.radius = min(self.area.w * self.options.pieRadius,
-                          self.area.h * self.options.pieRadius)
+        self.centerx = self.layout.chart.x + self.layout.chart.w * 0.5
+        self.centery = self.layout.chart.y + self.layout.chart.h * 0.5
+        self.radius = min(self.layout.chart.w * self.options.pieRadius,
+                          self.layout.chart.h * self.options.pieRadius)
 
         slices = [dict(name=key,
                        value=(i, value[0][1]))
@@ -83,7 +83,7 @@ class PieChart(Chart):
 
         if self.options.background.baseColor:
             cx.set_source_rgb(*hex2rgb(self.options.background.baseColor))
-            x, y, w, h = 0, 0, self.area.w, self.area.h
+            x, y, w, h = 0, 0, self.layout.chart.w, self.layout.chart.h
             w += self.options.padding.left + self.options.padding.right
             h += self.options.padding.top + self.options.padding.bottom
             cx.rectangle(x, y, w, h)

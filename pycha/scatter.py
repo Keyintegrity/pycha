@@ -26,8 +26,8 @@ class ScatterplotChart(LineChart):
         """Renders a scatterplot"""
 
         def drawSymbol(point, size):
-            ox = point.x * self.area.w + self.area.x
-            oy = point.y * self.area.h + self.area.y
+            ox = point.x * self.layout.chart.w + self.layout.chart.x
+            oy = point.y * self.layout.chart.h + self.layout.chart.y
             cx.arc(ox, oy, size, 0.0, 2 * math.pi)
             cx.fill()
 
