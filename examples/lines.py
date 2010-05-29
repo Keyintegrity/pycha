@@ -24,5 +24,5 @@ lines = (
     ('line.py', 123),
     ('pie.py', 210),
     ('scatter.py', 38),
-    ('stackerbar.py', 121),
+    ('stackedbar.py', 121),
 )
