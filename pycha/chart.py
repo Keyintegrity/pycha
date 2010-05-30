@@ -60,6 +60,9 @@ class Chart(object):
 
         self.colorScheme = None
 
+        # debug mode to draw aditional hints
+        self.debug = True
+
     def addDataset(self, dataset):
         """Adds an object containing chart data to the storage hash"""
         self.datasets += dataset
@@ -108,7 +111,8 @@ class Chart(object):
                            self.xticks, self.yticks)
 
         self._renderBackground(cx)
-        self.layout.render(cx)
+        if self.debug:
+            self.layout.render(cx)
         self._renderChart(cx)
         self._renderAxis(cx)
         self._renderTitle(cx)
@@ -351,18 +355,14 @@ class Chart(object):
     def _renderChart(self, cx):
         raise NotImplementedError
 
-    def _renderYTick(self, cx, tick):
-        """Aux method for _renderAxis"""
-
+    def _renderTick(self, cx, tick, x, y, x2, y2, rotate, text_position):
+        """Aux method for _renderXTick and _renderYTick"""
         if callable(tick):
             return
 
-        x = self.layout.y_ticks.x + self.layout.y_ticks.w
-        y = self.layout.y_ticks.y + tick[0] * self.layout.y_ticks.h
-
         cx.new_path()
         cx.move_to(x, y)
-        cx.line_to(x - self.options.axis.tickSize, y)
+        cx.line_to(x2, y2)
         cx.close_path()
         cx.stroke()
 
@@ -372,79 +372,73 @@ class Chart(object):
         cx.set_font_size(self.options.axis.tickFontSize)
 
         label = safe_unicode(tick[1], self.options.encoding)
-        extents = cx.text_extents(label)
-        labelWidth = extents[2]
-        labelHeight = extents[3]
+        xb, yb, width, height, xa, ya = cx.text_extents(label)
 
-        if self.options.axis.y.rotate:
-            radians = math.radians(self.options.axis.y.rotate)
-            cx.move_to(x - self.options.axis.tickSize
-                       - (labelWidth * math.cos(radians))
-                       - 4,
-                       y + (labelWidth * math.sin(radians))
-                       + labelHeight / (2.0 / math.cos(radians)))
-            cx.rotate(-radians)
+        x, y = text_position(width, height)
+        cx.move_to(x - xb, y - yb)
+
+        if rotate:
+            cx.save()
+            cx.translate(x, y)
+            radians = math.radians(rotate)
+            cx.rotate(radians)
+            cx.move_to(-xb, -yb)
             cx.show_text(label)
-            cx.rotate(radians) # this is probably faster than a save/restore
+            if self.debug:
+                cx.rectangle(0, 0, width, height)
+                cx.stroke()
+            cx.restore()
         else:
-            cx.move_to(x - self.options.axis.tickSize - labelWidth - 4,
-                       y + labelHeight / 2.0)
+            cx.move_to(x - xb, y - yb)
             cx.show_text(label)
+            if self.debug:
+                cx.rectangle(x, y, width, height)
+                cx.stroke()
 
         return label
 
-    def _renderXTick(self, cx, tick, fontAscent):
-        if callable(tick):
-            return
+    def _renderYTick(self, cx, tick):
+        """Aux method for _renderAxis"""
+        x = self.layout.y_ticks.x + self.layout.y_ticks.w
+        y = self.layout.y_ticks.y + tick[0] * self.layout.y_ticks.h
+
+        def text_position(width, height):
+            return (x - width - self.options.axis.tickSize, y - height / 2.0)
+
+        return self._renderTick(cx, tick,
+                                x, y,
+                                x - self.options.axis.tickSize, y,
+                                self.options.axis.y.rotate,
+                                text_position)
+
+    def _renderXTick(self, cx, tick):
+        """Aux method for _renderAxis"""
 
         x = self.layout.x_ticks.x + tick[0] * self.layout.x_ticks.w
         y = self.layout.x_ticks.y
 
-        cx.new_path()
-        cx.move_to(x, y)
-        cx.line_to(x, y + self.options.axis.tickSize)
-        cx.close_path()
-        cx.stroke()
+        def text_position(width, height):
+            return (x - width / 2.0, y + self.options.axis.tickSize)
 
-        cx.select_font_face(self.options.axis.tickFont,
-                            cairo.FONT_SLANT_NORMAL,
-                            cairo.FONT_WEIGHT_NORMAL)
-        cx.set_font_size(self.options.axis.tickFontSize)
-
-        label = safe_unicode(tick[1], self.options.encoding)
-        extents = cx.text_extents(label)
-        labelWidth = extents[2]
-        labelHeight = extents[3]
-
-        if self.options.axis.x.rotate:
-            radians = math.radians(self.options.axis.x.rotate)
-            cx.move_to(x - (labelHeight * math.cos(radians)),
-                       y + self.options.axis.tickSize
-                       + (labelHeight * math.cos(radians))
-                       + 4.0)
-            cx.rotate(radians)
-            cx.show_text(label)
-            cx.rotate(-radians)
-        else:
-            cx.move_to(x - labelWidth / 2.0,
-                       y + self.options.axis.tickSize
-                       + fontAscent + 4.0)
-            cx.show_text(label)
-        return label
+        return self._renderTick(cx, tick,
+                                x, y,
+                                x, y + self.options.axis.tickSize,
+                                self.options.axis.x.rotate,
+                                text_position)
 
     def _renderAxisLabel(self, cx, label, x, y, vertical=False):
         cx.select_font_face(self.options.axis.labelFont,
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
         cx.set_font_size(self.options.axis.labelFontSize)
-        label_width, label_height = cx.text_extents(label)[2:4]
-        font_ascent = cx.font_extents()[0]
+        xb, yb, width, height, xa, ya = cx.text_extents(label)
+
         if vertical:
-            cx.move_to(x + label_height, y + label_width / 2)
+            cx.move_to(x + height, y + width / 2)
             radians = math.radians(90)
             cx.rotate(-radians)
         else:
-            cx.move_to(x - label_width / 2.0, y + label_height)
+            cx.move_to(x - width / 2.0, y + height)
 
         cx.show_text(label)
 
@@ -516,7 +510,6 @@ class Chart(object):
             self._renderYAxis(cx)
 
         if not self.options.axis.x.hide:
-            font_ascent = cx.font_extents()[0]
             if self.xticks:
                 cx.save()
                 cx.rectangle(self.layout.x_ticks.x, self.layout.x_ticks.y,
@@ -525,7 +518,7 @@ class Chart(object):
                              + self.layout.x_tick_labels.h)
                 cx.clip()
                 for tick in self.xticks:
-                    self._renderXTick(cx, tick, font_ascent)
+                    self._renderXTick(cx, tick)
                 cx.restore()
 
             if self.options.axis.x.label:
@@ -554,7 +547,7 @@ class Chart(object):
             x = (self.layout.title.x
                  + self.layout.title.w / 2.0
                  - title_width / 2.0)
-            y = self.layout.title.y + cx.font_extents()[0] # font ascent
+            y = self.layout.title.y - extents[1]
 
             cx.move_to(x, y)
             cx.show_text(title)
@@ -684,9 +677,12 @@ class Layout(object):
                                               options.axis.labelFont,
                                               options.axis.labelFontSize,
                                               options.encoding)[1]
+
         x_axis_tick_labels_height = self._getAxisTickLabelsSize(cx, options,
+                                                                options.axis.x,
                                                                 xticks)[1]
         y_axis_tick_labels_width = self._getAxisTickLabelsSize(cx, options,
+                                                               options.axis.y,
                                                                yticks)[0]
 
         self.y_label.x = options.padding.left
@@ -754,7 +750,7 @@ class Layout(object):
         draw_area(self.chart, 75/255.0, 75/255.0, 1.0)
         cx.restore()
 
-    def _getAxisTickLabelsSize(self, cx, options, ticks):
+    def _getAxisTickLabelsSize(self, cx, options, axis, ticks):
         cx.save()
         cx.select_font_face(options.axis.tickFont,
                             cairo.FONT_SLANT_NORMAL,
@@ -762,7 +758,7 @@ class Layout(object):
         cx.set_font_size(options.axis.tickFontSize)
 
         max_width = max_height = 0.0
-        if not options.axis.y.hide:
+        if not axis.hide:
             extents = [cx.text_extents(safe_unicode(
                         tick[1], options.encoding,
                         ))[2:4] # get width and height as a tuple
@@ -770,8 +766,8 @@ class Layout(object):
             if extents:
                 widths, heights = zip(*extents)
                 max_width, max_height = max(widths), max(heights)
-                if options.axis.y.rotate:
-                    radians = math.radians(options.axis.y.rotate)
+                if axis.rotate:
+                    radians = math.radians(axis.rotate)
                     sinRadians = math.sin(radians)
                     cosRadians = math.cos(radians)
                     max_height = (max_width * sinRadians
