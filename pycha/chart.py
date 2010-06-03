@@ -427,6 +427,7 @@ class Chart(object):
                                 text_position)
 
     def _renderAxisLabel(self, cx, label, x, y, vertical=False):
+        cx.save()
         cx.select_font_face(self.options.axis.labelFont,
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
@@ -434,24 +435,29 @@ class Chart(object):
         xb, yb, width, height, xa, ya = cx.text_extents(label)
 
         if vertical:
-            cx.move_to(x + height, y + width / 2)
-            radians = math.radians(90)
-            cx.rotate(-radians)
+            y = y + width / 2.0
+            cx.move_to(x - xb, y - yb)
+            cx.translate(x, y)
+            cx.rotate(-math.radians(90))
+            cx.move_to(-xb, -yb)
+            cx.show_text(label)
+            if self.debug:
+                cx.rectangle(0, 0, width, height)
+                cx.stroke()
         else:
-            cx.move_to(x - width / 2.0, y + height)
-
-        cx.show_text(label)
+            x = x - width / 2.0
+            cx.move_to(x - xb, y - yb)
+            cx.show_text(label)
+            if self.debug:
+                cx.rectangle(x, y, width, height)
+                cx.stroke()
+        cx.restore()
 
     def _renderYAxisLabel(self, cx, label_text):
-        cx.save()
-        cx.rectangle(self.layout.y_label.x, self.layout.y_label.y,
-                     self.layout.y_label.w, self.layout.y_label.h)
-        cx.clip()
         label = safe_unicode(label_text, self.options.encoding)
         x = self.layout.y_label.x
         y = self.layout.y_label.y + self.layout.y_label.h / 2.0
         self._renderAxisLabel(cx, label, x, y, True)
-        cx.restore()
 
     def _renderYAxis(self, cx):
         """Draws the vertical line represeting the Y axis"""
@@ -463,15 +469,10 @@ class Chart(object):
         cx.stroke()
 
     def _renderXAxisLabel(self, cx, label_text):
-        cx.save()
-        cx.rectangle(self.layout.x_label.x, self.layout.x_label.y,
-                     self.layout.x_label.w, self.layout.x_label.h)
-        cx.clip()
         label = safe_unicode(label_text, self.options.encoding)
         x = self.layout.x_label.x + self.layout.x_label.w / 2.0
         y = self.layout.x_label.y
         self._renderAxisLabel(cx, label, x, y, False)
-        cx.restore()
 
     def _renderXAxis(self, cx):
         """Draws the horizontal line representing the X axis"""
@@ -493,16 +494,8 @@ class Chart(object):
 
         if not self.options.axis.y.hide:
             if self.yticks:
-                cx.save()
-                cx.rectangle(self.layout.y_tick_labels.x,
-                             self.layout.y_tick_labels.y,
-                             self.layout.y_tick_labels.w
-                             + self.layout.y_ticks.w,
-                             self.layout.y_tick_labels.h)
-                cx.clip()
                 for tick in self.yticks:
                     self._renderYTick(cx, tick)
-                cx.restore()
 
             if self.options.axis.y.label:
                 self._renderYAxisLabel(cx, self.options.axis.y.label)
@@ -511,15 +504,8 @@ class Chart(object):
 
         if not self.options.axis.x.hide:
             if self.xticks:
-                cx.save()
-                cx.rectangle(self.layout.x_ticks.x, self.layout.x_ticks.y,
-                             self.layout.x_ticks.w,
-                             self.layout.x_ticks.h
-                             + self.layout.x_tick_labels.h)
-                cx.clip()
                 for tick in self.xticks:
                     self._renderXTick(cx, tick)
-                cx.restore()
 
             if self.options.axis.x.label:
                 self._renderXAxisLabel(cx, self.options.axis.x.label)
@@ -531,9 +517,6 @@ class Chart(object):
     def _renderTitle(self, cx):
         if self.options.title:
             cx.save()
-            cx.rectangle(self.layout.title.x, self.layout.title.y,
-                         self.layout.title.w, self.layout.title.h)
-            cx.clip()
             cx.select_font_face(self.options.titleFont,
                                 cairo.FONT_SLANT_NORMAL,
                                 cairo.FONT_WEIGHT_BOLD)
