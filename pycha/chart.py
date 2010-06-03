@@ -374,21 +374,23 @@ class Chart(object):
         label = safe_unicode(tick[1], self.options.encoding)
         xb, yb, width, height, xa, ya = cx.text_extents(label)
 
-        x, y = text_position(width, height)
-        cx.move_to(x - xb, y - yb)
+        x, y = text_position
 
         if rotate:
             cx.save()
             cx.translate(x, y)
-            radians = math.radians(rotate)
-            cx.rotate(radians)
-            cx.move_to(-xb, -yb)
+            cx.rotate(math.radians(rotate))
+            x = -width / 2.0
+            y = -height / 2.0
+            cx.move_to(x - xb, y - yb)
             cx.show_text(label)
             if self.debug:
-                cx.rectangle(0, 0, width, height)
+                cx.rectangle(x, y, width, height)
                 cx.stroke()
             cx.restore()
         else:
+            x -= width / 2.0
+            y -= height / 2.0
             cx.move_to(x - xb, y - yb)
             cx.show_text(label)
             if self.debug:
@@ -402,8 +404,8 @@ class Chart(object):
         x = self.layout.y_ticks.x + self.layout.y_ticks.w
         y = self.layout.y_ticks.y + tick[0] * self.layout.y_ticks.h
 
-        def text_position(width, height):
-            return (x - width - self.options.axis.tickSize, y - height / 2.0)
+        text_position = ((self.layout.y_tick_labels.x
+                          + self.layout.y_tick_labels.w / 2.0), y)
 
         return self._renderTick(cx, tick,
                                 x, y,
@@ -417,8 +419,8 @@ class Chart(object):
         x = self.layout.x_ticks.x + tick[0] * self.layout.x_ticks.w
         y = self.layout.x_ticks.y
 
-        def text_position(width, height):
-            return (x - width / 2.0, y + self.options.axis.tickSize)
+        text_position = (x, (self.layout.x_tick_labels.y
+                             + self.layout.x_tick_labels.h / 2.0))
 
         return self._renderTick(cx, tick,
                                 x, y,
@@ -751,12 +753,12 @@ class Layout(object):
                 max_width, max_height = max(widths), max(heights)
                 if axis.rotate:
                     radians = math.radians(axis.rotate)
-                    sinRadians = math.sin(radians)
-                    cosRadians = math.cos(radians)
-                    max_height = (max_width * sinRadians
-                                  + max_height * cosRadians)
-                    max_width = (max_width * cosRadians
-                                 + max_height * sinRadians)
+                    sin = math.sin(radians)
+                    cos = math.cos(radians)
+                    max_width, max_height = (
+                        max_width * cos + max_height * sin,
+                        max_width * sin + max_height * cos,
+                        )
         cx.restore()
         return max_width, max_height
 
