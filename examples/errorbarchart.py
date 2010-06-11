@@ -23,7 +23,7 @@ import pycha.bar
 
 
 def barChart(output, chartFactory):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     # note that this dataset is composed by triplets, where the
     # third item is the error
@@ -39,10 +39,6 @@ def barChart(output, chartFactory):
         },
         'legend': {
             'hide': True,
-        },
-        'padding': {
-            'left': 30,
-            'bottom': 30,
         },
         'title': 'Error bars'
     }

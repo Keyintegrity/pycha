@@ -25,7 +25,7 @@ from lines import lines
 
 
 def barChart(output, chartFactory):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     dataSet = (
         ('lines', [(i, l[1]) for i, l in enumerate(lines)]),

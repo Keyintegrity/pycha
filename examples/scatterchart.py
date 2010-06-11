@@ -24,7 +24,7 @@ import pycha.scatter
 
 
 def scatterplotChart(output):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     top = 50
     dataSet = (
@@ -48,9 +48,6 @@ def scatterplotChart(output):
         },
         'legend': {
             'hide': True,
-        },
-        'padding': {
-            'left': 55,
         },
         'title': u'Scatter plot',
     }
