@@ -24,7 +24,7 @@ import pycha.pie
 from lines import lines
 
 def pieChart(output):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 400)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 800)
 
     dataSet = [(line[0], [[0, line[1]]]) for line in lines]
 
@@ -34,18 +34,10 @@ def pieChart(output):
                 'ticks': [dict(v=i, label=d[0]) for i, d in enumerate(lines)],
             }
         },
-        'background': {
-            'hide': True,
-        },
-        'padding': {
-            'left': 70,
-            'right': 10,
-            'top': 0,
-            'bottom': 0,
-        },
         'legend': {
             'hide': True,
-        }
+        },
+        'title': 'Pie Chart',
     }
     chart = pycha.pie.PieChart(surface, options)
 
