@@ -725,14 +725,14 @@ class Layout(object):
             cx.fill()
 
         cx.save()
-        draw_area(self.title, 1, 126/255.0, 0)
-        draw_area(self.y_label, 41/255.0, 91/255.0, 41/255.0)
-        draw_area(self.x_label, 41/255.0, 91/255.0, 41/255.0)
-        draw_area(self.y_tick_labels, 0, 115/255.0, 0)
-        draw_area(self.x_tick_labels, 0, 115/255.0, 0)
-        draw_area(self.y_ticks, 229/255.0, 241/255.0, 18/255.0)
-        draw_area(self.x_ticks, 229/255.0, 241/255.0, 18/255.0)
-        draw_area(self.chart, 75/255.0, 75/255.0, 1.0)
+        draw_area(self.title, 1, 126/255.0, 0) # orange
+        draw_area(self.y_label, 41/255.0, 91/255.0, 41/255.0) # grey
+        draw_area(self.x_label, 41/255.0, 91/255.0, 41/255.0) # grey
+        draw_area(self.y_tick_labels, 0, 115/255.0, 0) # green
+        draw_area(self.x_tick_labels, 0, 115/255.0, 0) # green
+        draw_area(self.y_ticks, 229/255.0, 241/255.0, 18/255.0) # yellow
+        draw_area(self.x_ticks, 229/255.0, 241/255.0, 18/255.0) # yellow
+        draw_area(self.chart, 75/255.0, 75/255.0, 1.0) # blue
         cx.restore()
 
     def _getAxisTickLabelsSize(self, cx, options, axis, ticks):
