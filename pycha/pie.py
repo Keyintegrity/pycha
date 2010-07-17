@@ -19,7 +19,7 @@ import math
 
 import cairo
 
-from pycha.chart import Chart, Option
+from pycha.chart import Chart, Option, Layout, Area, get_text_extents
 from pycha.color import hex2rgb
 
 
@@ -30,15 +30,10 @@ class PieChart(Chart):
         self.slices = []
         self.centerx = 0
         self.centery = 0
-        self.radius = 0
+        self.layout = PieLayout(self.slices)
 
     def _updateChart(self):
         """Evaluates measures for pie charts"""
-        self.centerx = self.layout.chart.x + self.layout.chart.w * 0.5
-        self.centery = self.layout.chart.y + self.layout.chart.h * 0.5
-        self.radius = min(self.layout.chart.w * self.options.pieRadius,
-                          self.layout.chart.h * self.options.pieRadius)
-
         slices = [dict(name=key,
                        value=(i, value[0][1]))
                   for i, (key, value) in enumerate(self.datasets)]
@@ -47,7 +42,7 @@ class PieChart(Chart):
 
         fraction = angle = 0.0
 
-        self.slices = []
+        del self.slices[:]
         for slice in slices:
             if slice['value'][1] > 0:
                 angle += fraction
@@ -74,34 +69,35 @@ class PieChart(Chart):
                 label = '%s (%.1f%%)' % (slice.name, slice.fraction * 100)
                 self.xticks.append((slice.xval, label))
 
-    def _renderBackground(self, cx):
-        """Renders the background of the chart"""
-        if self.options.background.hide:
-            return
-
-        cx.save()
-
-        if self.options.background.baseColor:
-            cx.set_source_rgb(*hex2rgb(self.options.background.baseColor))
-            x, y, w, h = 0, 0, self.layout.chart.w, self.layout.chart.h
-            w += self.options.padding.left + self.options.padding.right
-            h += self.options.padding.top + self.options.padding.bottom
-            cx.rectangle(x, y, w, h)
-            cx.fill()
-
-        cx.restore()
+    def _renderLines(self, cx):
+        """Aux function for _renderBackground"""
+        # there are no lines in a Pie Chart
 
     def _renderChart(self, cx):
         """Renders a pie chart"""
+        self.centerx = self.layout.chart.x + self.layout.chart.w * 0.5
+        self.centery = self.layout.chart.y + self.layout.chart.h * 0.5
+
+        if self.debug:
+            cx.set_source_rgba(1, 0, 0, 0.5)
+            px = max(cx.device_to_user_distance(1, 1))
+            for x, y in self.layout._lines:
+                cx.arc(x, y, 5 * px, 0, 2 * math.pi)
+                cx.fill()
+                cx.new_path()
+                cx.move_to(self.centerx, self.centery)
+                cx.line_to(x, y)
+                cx.stroke()
+
         cx.set_line_join(cairo.LINE_JOIN_ROUND)
 
-        if self.options.stroke.shadow:
+        if self.options.stroke.shadow and False:
             cx.save()
             cx.set_source_rgba(0, 0, 0, 0.15)
 
             cx.new_path()
             cx.move_to(self.centerx, self.centery)
-            cx.arc(self.centerx + 1, self.centery + 2, self.radius + 1, 0,
+            cx.arc(self.centerx + 1, self.centery + 2, self.layout.radius + 1, 0,
                    math.pi * 2)
             cx.line_to(self.centerx, self.centery)
             cx.close_path()
@@ -113,11 +109,11 @@ class PieChart(Chart):
             if slice.isBigEnough():
                 cx.set_source_rgb(*self.colorScheme[slice.name])
                 if self.options.shouldFill:
-                    slice.draw(cx, self.centerx, self.centery, self.radius)
+                    slice.draw(cx, self.centerx, self.centery, self.layout.radius)
                     cx.fill()
 
                 if not self.options.stroke.hide:
-                    slice.draw(cx, self.centerx, self.centery, self.radius)
+                    slice.draw(cx, self.centerx, self.centery, self.layout.radius)
                     cx.set_line_width(self.options.stroke.width)
                     cx.set_source_rgb(*hex2rgb(self.options.stroke.color))
                     cx.stroke()
@@ -130,8 +126,15 @@ class PieChart(Chart):
             return
 
         self.xlabels = []
-        lookup = dict([(slice.xval, slice) for slice in self.slices])
 
+        if self.debug:
+            px = max(cx.device_to_user_distance(1, 1))
+            cx.set_source_rgba(0, 0, 1, 0.5)
+            for x, y, w, h in self.layout.ticks:
+                cx.rectangle(x, y, w, h)
+                cx.stroke()
+                cx.arc(x + w/2.0, y + h/2.0, 5 * px, 0, 2 * math.pi)
+                cx.fill()
 
         cx.select_font_face(self.options.axis.tickFont,
                             cairo.FONT_SLANT_NORMAL,
@@ -140,36 +143,14 @@ class PieChart(Chart):
 
         cx.set_source_rgb(*hex2rgb(self.options.axis.labelColor))
 
-        for tick in self.xticks:
-            slice = lookup[tick[0]]
-
-            normalisedAngle = slice.getNormalisedAngle()
-
-            big_radius = self.radius + 10
-            labelx = self.centerx + math.sin(normalisedAngle) * big_radius
-            labely = self.centery - math.cos(normalisedAngle) * big_radius
-
+        for i, tick in enumerate(self.xticks):
             label = tick[1]
-            extents = cx.text_extents(label)
-            labelWidth = extents[2]
-            labelHeight = extents[3]
-            x = y = 0
+            x, y, w, h = self.layout.ticks[i]
 
-            if normalisedAngle <= math.pi * 0.5:
-                x = labelx
-                y = labely - labelHeight
-            elif math.pi * 0.5 < normalisedAngle <= math.pi:
-                x = labelx
-                y = labely
-            elif math.pi < normalisedAngle <= math.pi * 1.5:
-                x = labelx - labelWidth
-                y = labely
-            else:
-                x = labelx - labelWidth
-                y = labely - labelHeight
+            xb, yb, width, height, xa, ya = cx.text_extents(label)
 
             # draw label with text tick[1]
-            cx.move_to(x, y)
+            cx.move_to(x - xb, y - yb)
             cx.show_text(label)
             self.xlabels.append(label)
 
@@ -194,9 +175,7 @@ class Slice(object):
     def draw(self, cx, centerx, centery, radius):
         cx.new_path()
         cx.move_to(centerx, centery)
-        cx.arc(centerx, centery, radius,
-               self.startAngle - math.pi/2,
-               self.endAngle - math.pi/2)
+        cx.arc(centerx, centery, radius, -self.endAngle, -self.startAngle)
         cx.close_path()
 
     def getNormalisedAngle(self):
@@ -208,3 +187,107 @@ class Slice(object):
             normalisedAngle += math.pi * 2
 
         return normalisedAngle
+
+
+class PieLayout(Layout):
+    """Set of chart areas for pie charts"""
+
+    def __init__(self, slices):
+        self.slices = slices
+
+        self.title = Area()
+        self.chart = Area()
+
+        self.ticks = []
+        self.radius = 0
+
+        self._areas = (
+            (self.title, (1, 126/255.0, 0)), # orange
+            (self.chart, (75/255.0, 75/255.0, 1.0)), # blue
+            )
+
+        self._lines = []
+
+    def update(self, cx, options, width, height, xticks, yticks):
+        self.title.x = options.padding.left
+        self.title.y = options.padding.top
+        self.title.w = width - (options.padding.left + options.padding.right)
+        self.title.h = get_text_extents(cx,
+                                        options.title,
+                                        options.titleFont,
+                                        options.titleFontSize,
+                                        options.encoding)[1]
+
+        lookup = dict([(slice.xval, slice) for slice in self.slices])
+
+        self.chart.x = self.title.x
+        self.chart.y = self.title.y + self.title.h
+        self.chart.w = self.title.w
+        self.chart.h = height - self.title.h - (options.padding.top
+                                                + options.padding.bottom)
+
+        self.radius = min(self.chart.w / 2.0, self.chart.h / 2.0)
+        for tick in xticks:
+            slice = lookup.get(tick[0], None)
+            self.radius = min(self.radius,
+                              self.get_min_radius(cx, options, tick[1], slice))
+
+
+    def get_min_radius(self, cx, options, text, slice):
+        centerx = self.chart.x + self.chart.w * 0.5
+        centery = self.chart.y + self.chart.h * 0.5
+
+        w, h = get_text_extents(cx, text,
+                                options.axis.tickFont,
+                                options.axis.tickFontSize,
+                                options.encoding)
+
+        min_radius = None
+
+        # computes the intersection between the rect that has
+        # that angle with the X axis and the bounding chart box
+        angle = slice.getNormalisedAngle()
+        if 0.25 * math.pi <= angle < 0.75 * math.pi:
+            # intersects with the top rect
+            y = self.chart.y
+            x = centerx + (centery - y) / math.tan(angle)
+            self._lines.append((x, y))
+
+            x1 = x - w / 2.0 - ((h / 2.0) / math.tan(angle))
+            self.ticks.append((x1, self.chart.y, w, h))
+
+            min_radius = abs((y + h) - centery)
+        elif 0.75 * math.pi <= angle < 1.25 * math.pi:
+            # intersects with the left rect
+            x = self.chart.x
+            y = math.tan(angle) * (x - centerx) + centery
+            y = self.chart.y + self.chart.h - y
+            self._lines.append((x, y))
+
+            y1 = y - h / 4.0 - ((w / 2.0) * math.tan(angle))
+            self.ticks.append((x, y1, w, h))
+
+            min_radius = abs(centerx - (x + w))
+        elif 1.25 * math.pi <= angle < 1.75 * math.pi:
+            # intersects with the down rect
+            y = self.chart.y + self.chart.h
+            x = centerx + (y - centery) / math.tan(angle)
+            self._lines.append((x, y))
+
+            x1 = x - w / 2.0 - ((h / 2.0) / math.tan(angle))
+            self.ticks.append((x1, y - h, w, h))
+
+            min_radius = abs((y - h) - centery)
+        else:
+            # intersects with the right rect
+            x = self.chart.x + self.chart.w
+            y = math.tan(angle) * (x - centerx) + centery
+            y = self.chart.y + self.chart.h - y
+            self._lines.append((x, y))
+
+            y1 = y - h / 4.0 + ((w / 2.0) * math.tan(angle))
+            self.ticks.append((x - w, y1, w, h))
+
+            min_radius = abs((x - w) - centerx)
+
+        return min_radius
