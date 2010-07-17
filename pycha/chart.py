@@ -61,7 +61,7 @@ class Chart(object):
         self.colorScheme = None
 
         # debug mode to draw aditional hints
-        self.debug = True
+        self.debug = False
 
     def addDataset(self, dataset):
         """Adds an object containing chart data to the storage hash"""
@@ -643,6 +643,17 @@ class Layout(object):
         self.y_ticks = Area()
         self.chart = Area()
 
+        self._areas = (
+            (self.title, (1, 126/255.0, 0)), # orange
+            (self.y_label, (41/255.0, 91/255.0, 41/255.0)), # grey
+            (self.x_label, (41/255.0, 91/255.0, 41/255.0)), # grey
+            (self.y_tick_labels, (0, 115/255.0, 0)), # green
+            (self.x_tick_labels, (0, 115/255.0, 0)), # green
+            (self.y_ticks, (229/255.0, 241/255.0, 18/255.0)), # yellow
+            (self.x_ticks, (229/255.0, 241/255.0, 18/255.0)), # yellow
+            (self.chart, (75/255.0, 75/255.0, 1.0)), # blue
+            )
+
     def update(self, cx, options, width, height, xticks, yticks):
         self.title.x = options.padding.left
         self.title.y = options.padding.top
@@ -725,14 +736,8 @@ class Layout(object):
             cx.fill()
 
         cx.save()
-        draw_area(self.title, 1, 126/255.0, 0) # orange
-        draw_area(self.y_label, 41/255.0, 91/255.0, 41/255.0) # grey
-        draw_area(self.x_label, 41/255.0, 91/255.0, 41/255.0) # grey
-        draw_area(self.y_tick_labels, 0, 115/255.0, 0) # green
-        draw_area(self.x_tick_labels, 0, 115/255.0, 0) # green
-        draw_area(self.y_ticks, 229/255.0, 241/255.0, 18/255.0) # yellow
-        draw_area(self.x_ticks, 229/255.0, 241/255.0, 18/255.0) # yellow
-        draw_area(self.chart, 75/255.0, 75/255.0, 1.0) # blue
+        for area, color in self._areas:
+            draw_area(area, *color)
         cx.restore()
 
     def _getAxisTickLabelsSize(self, cx, options, axis, ticks):
