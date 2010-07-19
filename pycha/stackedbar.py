@@ -21,8 +21,8 @@ from pycha.chart import uniqueIndices
 
 class StackedBarChart(BarChart):
 
-    def __init__(self, surface=None, options={}):
-        super(StackedBarChart, self).__init__(surface, options)
+    def __init__(self, surface=None, options={}, debug=False):
+        super(StackedBarChart, self).__init__(surface, options, debug)
         self.barWidth = 0.0
 
     def _updateXY(self):

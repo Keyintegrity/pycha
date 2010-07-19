@@ -25,8 +25,8 @@ from pycha.color import hex2rgb
 
 class PieChart(Chart):
 
-    def __init__(self, surface=None, options={}):
-        super(PieChart, self).__init__(surface, options)
+    def __init__(self, surface=None, options={}, debug=False):
+        super(PieChart, self).__init__(surface, options, debug)
         self.slices = []
         self.centerx = 0
         self.centery = 0

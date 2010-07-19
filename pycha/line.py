@@ -21,8 +21,8 @@ from pycha.color import hex2rgb
 
 class LineChart(Chart):
 
-    def __init__(self, surface=None, options={}):
-        super(LineChart, self).__init__(surface, options)
+    def __init__(self, surface=None, options={}, debug=False):
+        super(LineChart, self).__init__(surface, options, debug)
         self.points = []
 
     def _updateChart(self):

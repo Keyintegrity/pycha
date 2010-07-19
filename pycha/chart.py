@@ -27,7 +27,7 @@ from pycha.utils import safe_unicode
 
 class Chart(object):
 
-    def __init__(self, surface, options={}):
+    def __init__(self, surface, options={}, debug=False):
         # this flag is useful to reuse this chart for drawing different data
         # or use different options
         self.resetFlag = False
@@ -61,7 +61,7 @@ class Chart(object):
         self.colorScheme = None
 
         # debug mode to draw aditional hints
-        self.debug = False
+        self.debug = debug
 
     def addDataset(self, dataset):
         """Adds an object containing chart data to the storage hash"""

@@ -22,8 +22,8 @@ from pycha.utils import safe_unicode
 
 class BarChart(Chart):
 
-    def __init__(self, surface=None, options={}):
-        super(BarChart, self).__init__(surface, options)
+    def __init__(self, surface=None, options={}, debug=False):
+        super(BarChart, self).__init__(surface, options, debug)
         self.bars = []
         self.minxdelta = 0.0
         self.barWidthForSet = 0.0
