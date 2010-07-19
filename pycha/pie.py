@@ -97,8 +97,8 @@ class PieChart(Chart):
 
             cx.new_path()
             cx.move_to(self.centerx, self.centery)
-            cx.arc(self.centerx + 1, self.centery + 2, self.layout.radius + 1, 0,
-                   math.pi * 2)
+            cx.arc(self.centerx + 1, self.centery + 2,
+                   self.layout.radius + 1, 0, math.pi * 2)
             cx.line_to(self.centerx, self.centery)
             cx.close_path()
             cx.fill()
@@ -109,11 +109,13 @@ class PieChart(Chart):
             if slice.isBigEnough():
                 cx.set_source_rgb(*self.colorScheme[slice.name])
                 if self.options.shouldFill:
-                    slice.draw(cx, self.centerx, self.centery, self.layout.radius)
+                    slice.draw(cx, self.centerx, self.centery,
+                               self.layout.radius)
                     cx.fill()
 
                 if not self.options.stroke.hide:
-                    slice.draw(cx, self.centerx, self.centery, self.layout.radius)
+                    slice.draw(cx, self.centerx, self.centery,
+                               self.layout.radius)
                     cx.set_line_width(self.options.stroke.width)
                     cx.set_source_rgb(*hex2rgb(self.options.stroke.color))
                     cx.stroke()
@@ -133,7 +135,7 @@ class PieChart(Chart):
             for x, y, w, h in self.layout.ticks:
                 cx.rectangle(x, y, w, h)
                 cx.stroke()
-                cx.arc(x + w/2.0, y + h/2.0, 5 * px, 0, 2 * math.pi)
+                cx.arc(x + w / 2.0, y + h / 2.0, 5 * px, 0, 2 * math.pi)
                 cx.fill()
 
         cx.select_font_face(self.options.axis.tickFont,
@@ -202,8 +204,8 @@ class PieLayout(Layout):
         self.radius = 0
 
         self._areas = (
-            (self.title, (1, 126/255.0, 0)), # orange
-            (self.chart, (75/255.0, 75/255.0, 1.0)), # blue
+            (self.title, (1, 126 / 255.0, 0)),  # orange
+            (self.chart, (75 / 255.0, 75 / 255.0, 1.0)),  # blue
             )
 
         self._lines = []
@@ -226,37 +228,36 @@ class PieLayout(Layout):
         self.chart.h = height - self.title.h - (options.padding.top
                                                 + options.padding.bottom)
 
-        self.radius = min(self.chart.w / 2.0, self.chart.h / 2.0)
-        for tick in xticks:
-            slice = lookup.get(tick[0], None)
-            self.radius = min(self.radius,
-                              self.get_min_radius(cx, options, tick[1], slice))
-
-
-    def get_min_radius(self, cx, options, text, slice):
         centerx = self.chart.x + self.chart.w * 0.5
         centery = self.chart.y + self.chart.h * 0.5
 
-        w, h = get_text_extents(cx, text,
-                                options.axis.tickFont,
-                                options.axis.tickFontSize,
-                                options.encoding)
+        self.radius = min(self.chart.w / 2.0, self.chart.h / 2.0)
+        for tick in xticks:
+            slice = lookup.get(tick[0], None)
+            width, height = get_text_extents(cx, tick[1],
+                                             options.axis.tickFont,
+                                             options.axis.tickFontSize,
+                                             options.encoding)
+            angle = slice.getNormalisedAngle()
+            radius = self.get_min_radius(angle, centerx, centery,
+                                         width, height)
+            self.radius = min(self.radius, radius)
 
+    def get_min_radius(self, angle, centerx, centery, text_width, text_height):
         min_radius = None
 
         # computes the intersection between the rect that has
         # that angle with the X axis and the bounding chart box
-        angle = slice.getNormalisedAngle()
         if 0.25 * math.pi <= angle < 0.75 * math.pi:
             # intersects with the top rect
             y = self.chart.y
             x = centerx + (centery - y) / math.tan(angle)
             self._lines.append((x, y))
 
-            x1 = x - w / 2.0 - ((h / 2.0) / math.tan(angle))
-            self.ticks.append((x1, self.chart.y, w, h))
+            x1 = x - text_width / 2.0 - ((text_height / 2.0) / math.tan(angle))
+            self.ticks.append((x1, self.chart.y, text_width, text_height))
 
-            min_radius = abs((y + h) - centery)
+            min_radius = abs((y + text_height) - centery)
         elif 0.75 * math.pi <= angle < 1.25 * math.pi:
             # intersects with the left rect
             x = self.chart.x
@@ -264,20 +265,20 @@ class PieLayout(Layout):
             y = self.chart.y + self.chart.h - y
             self._lines.append((x, y))
 
-            y1 = y - h / 4.0 - ((w / 2.0) * math.tan(angle))
-            self.ticks.append((x, y1, w, h))
+            y1 = y - text_height / 4.0 - ((text_width / 2.0) * math.tan(angle))
+            self.ticks.append((x, y1, text_width, text_height))
 
-            min_radius = abs(centerx - (x + w))
+            min_radius = abs(centerx - (x + text_width))
         elif 1.25 * math.pi <= angle < 1.75 * math.pi:
             # intersects with the down rect
             y = self.chart.y + self.chart.h
             x = centerx + (y - centery) / math.tan(angle)
             self._lines.append((x, y))
 
-            x1 = x - w / 2.0 - ((h / 2.0) / math.tan(angle))
-            self.ticks.append((x1, y - h, w, h))
+            x1 = x - text_width / 2.0 - ((text_height / 2.0) / math.tan(angle))
+            self.ticks.append((x1, y - text_height, text_width, text_height))
 
-            min_radius = abs((y - h) - centery)
+            min_radius = abs((y - text_height) - centery)
         else:
             # intersects with the right rect
             x = self.chart.x + self.chart.w
@@ -285,9 +286,9 @@ class PieLayout(Layout):
             y = self.chart.y + self.chart.h - y
             self._lines.append((x, y))
 
-            y1 = y - h / 4.0 + ((w / 2.0) * math.tan(angle))
-            self.ticks.append((x - w, y1, w, h))
+            y1 = y - text_height / 4.0 + ((text_width / 2.0) * math.tan(angle))
+            self.ticks.append((x - text_width, y1, text_width, text_height))
 
-            min_radius = abs((x - w) - centerx)
+            min_radius = abs((x - text_width) - centerx)
 
         return min_radius
