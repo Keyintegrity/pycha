@@ -78,17 +78,6 @@ class PieChart(Chart):
         self.centerx = self.layout.chart.x + self.layout.chart.w * 0.5
         self.centery = self.layout.chart.y + self.layout.chart.h * 0.5
 
-        if self.debug:
-            cx.set_source_rgba(1, 0, 0, 0.5)
-            px = max(cx.device_to_user_distance(1, 1))
-            for x, y in self.layout._lines:
-                cx.arc(x, y, 5 * px, 0, 2 * math.pi)
-                cx.fill()
-                cx.new_path()
-                cx.move_to(self.centerx, self.centery)
-                cx.line_to(x, y)
-                cx.stroke()
-
         cx.set_line_join(cairo.LINE_JOIN_ROUND)
 
         if self.options.stroke.shadow and False:
@@ -122,6 +111,17 @@ class PieChart(Chart):
 
         cx.restore()
 
+        if self.debug:
+            cx.set_source_rgba(1, 0, 0, 0.5)
+            px = max(cx.device_to_user_distance(1, 1))
+            for x, y in self.layout._lines:
+                cx.arc(x, y, 5 * px, 0, 2 * math.pi)
+                cx.fill()
+                cx.new_path()
+                cx.move_to(self.centerx, self.centery)
+                cx.line_to(x, y)
+                cx.stroke()
+
     def _renderAxis(self, cx):
         """Renders the axis for pie charts"""
         if self.options.axis.x.hide or not self.xticks:
@@ -136,6 +136,8 @@ class PieChart(Chart):
                 cx.rectangle(x, y, w, h)
                 cx.stroke()
                 cx.arc(x + w / 2.0, y + h / 2.0, 5 * px, 0, 2 * math.pi)
+                cx.fill()
+                cx.arc(x, y, 2 * px, 0, 2 * math.pi)
                 cx.fill()
 
         cx.select_font_face(self.options.axis.tickFont,
@@ -239,56 +241,112 @@ class PieLayout(Layout):
                                              options.axis.tickFontSize,
                                              options.encoding)
             angle = slice.getNormalisedAngle()
-            radius = self.get_min_radius(angle, centerx, centery,
-                                         width, height)
+            radius = self._get_min_radius(angle, centerx, centery,
+                                          width, height)
             self.radius = min(self.radius, radius)
 
-    def get_min_radius(self, angle, centerx, centery, text_width, text_height):
+        # Now that we now the radius we move the ticks as close as we can
+        # to the circle
+        for i, tick in enumerate(xticks):
+            slice = lookup.get(tick[0], None)
+            angle = slice.getNormalisedAngle()
+            self.ticks[i] = self._get_tick_position(self.radius, angle,
+                                                    self.ticks[i],
+                                                    centerx, centery)
+
+    def _get_min_radius(self, angle, centerx, centery, width, height):
         min_radius = None
+
+        # precompute some common values
+        tan = math.tan(angle)
+        half_width = width / 2.0
+        half_height = height / 2.0
+        offset_x = half_width * tan
+        offset_y = half_height / tan
+
+        def intersect_horizontal_line(y):
+            return centerx + (centery - y) / tan
+
+        def intersect_vertical_line(x):
+            return centery - tan * (x - centerx)
 
         # computes the intersection between the rect that has
         # that angle with the X axis and the bounding chart box
         if 0.25 * math.pi <= angle < 0.75 * math.pi:
             # intersects with the top rect
             y = self.chart.y
-            x = centerx + (centery - y) / math.tan(angle)
+            x = intersect_horizontal_line(y)
             self._lines.append((x, y))
 
-            x1 = x - text_width / 2.0 - ((text_height / 2.0) / math.tan(angle))
-            self.ticks.append((x1, self.chart.y, text_width, text_height))
+            x1 = x - half_width - offset_y
+            self.ticks.append((x1, self.chart.y, width, height))
 
-            min_radius = abs((y + text_height) - centery)
+            min_radius = abs((y + height) - centery)
         elif 0.75 * math.pi <= angle < 1.25 * math.pi:
             # intersects with the left rect
             x = self.chart.x
-            y = math.tan(angle) * (x - centerx) + centery
-            y = self.chart.y + self.chart.h - y
+            y = intersect_vertical_line(x)
             self._lines.append((x, y))
 
-            y1 = y - text_height / 4.0 - ((text_width / 2.0) * math.tan(angle))
-            self.ticks.append((x, y1, text_width, text_height))
+            y1 = y - half_height - offset_x
+            self.ticks.append((x, y1, width, height))
 
-            min_radius = abs(centerx - (x + text_width))
+            min_radius = abs(centerx - (x + width))
         elif 1.25 * math.pi <= angle < 1.75 * math.pi:
-            # intersects with the down rect
+            # intersects with the bottom rect
             y = self.chart.y + self.chart.h
-            x = centerx + (y - centery) / math.tan(angle)
+            x = intersect_horizontal_line(y)
             self._lines.append((x, y))
 
-            x1 = x - text_width / 2.0 - ((text_height / 2.0) / math.tan(angle))
-            self.ticks.append((x1, y - text_height, text_width, text_height))
+            x1 = x - half_width + offset_y
+            self.ticks.append((x1, y - height, width, height))
 
-            min_radius = abs((y - text_height) - centery)
+            min_radius = abs((y - height) - centery)
         else:
             # intersects with the right rect
             x = self.chart.x + self.chart.w
-            y = math.tan(angle) * (x - centerx) + centery
-            y = self.chart.y + self.chart.h - y
+            y = intersect_vertical_line(x)
             self._lines.append((x, y))
 
-            y1 = y - text_height / 4.0 + ((text_width / 2.0) * math.tan(angle))
-            self.ticks.append((x - text_width, y1, text_width, text_height))
+            y1 = y - half_height + offset_x
+            self.ticks.append((x - width, y1, width, height))
 
-            min_radius = abs((x - text_width) - centerx)
+            min_radius = abs((x - width) - centerx)
 
         return min_radius
+
+    def _get_tick_position(self, radius, angle, tick, centerx, centery):
+        text_width, text_height = tick[2:4]
+        half_width = text_width / 2.0
+        half_height = text_height / 2.0
+
+        if 0 <= angle < 0.5 * math.pi:
+            # first quadrant
+            k1 = j1 = k2 = 1
+            j2 = -1
+        elif 0.5 * math.pi <= angle < math.pi:
+            # second quadrant
+            k1 = k2 = -1
+            j1 = j2 = 1
+        elif math.pi <= angle < 1.5 * math.pi:
+            # third quadrant
+            k1 = j1 = k2 = -1
+            j2 = 1
+        elif 1.5 * math.pi <= angle < 2 * math.pi:
+            # fourth quadrant
+            k1 = k2 = 1
+            j1 = j2 = -1
+
+        cx = radius * math.cos(angle) + k1 * half_width
+        cy = radius * math.sin(angle) + j1 * half_height
+
+        radius2 = math.sqrt(cx * cx + cy * cy)
+
+        tan = math.tan(angle)
+        x = math.sqrt((radius2 * radius2) / (1 + tan * tan))
+        y = tan * x
+
+        x = centerx + k2 * x
+        y = centery + j2 * y
+
+        return x - half_width, y - half_height, text_width, text_height
