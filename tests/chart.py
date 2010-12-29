@@ -83,7 +83,7 @@ class ChartTests(unittest.TestCase):
         ch = pycha.chart.Chart(None)
         self.assertEqual(ch.resetFlag, False)
         self.assertEqual(ch.datasets, [])
-        self.assertEqual(ch.area, None)
+        self.assertNotEqual(ch.layout, None)
         self.assertEqual(ch.minxval, None)
         self.assertEqual(ch.maxxval, None)
         self.assertEqual(ch.minyval, None)
@@ -156,8 +156,6 @@ class ChartTests(unittest.TestCase):
         ch = pycha.chart.Chart(surface, opt)
         ch.addDataset(dataset)
         ch._updateXY()
-        self.assertEqual((ch.area.x, ch.area.y, ch.area.w, ch.area.h),
-                         (10, 10, 480, 480))
         self.assertEqual(ch.minxval, 0.0)
         self.assertEqual(ch.maxxval, 3)
         self.assertEqual(ch.xrange, 3)
