@@ -71,7 +71,6 @@ class PieTests(unittest.TestCase):
         self.assertEqual(ch.slices, [])
         self.assertEqual(ch.centerx, 0)
         self.assertEqual(ch.centery, 0)
-        self.assertEqual(ch.radius, 0)
 
     def test_updateChart(self):
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 500, 500)
@@ -84,11 +83,9 @@ class PieTests(unittest.TestCase):
                'pieRadius': 0.5}
         ch = pycha.pie.PieChart(surface, opt)
         ch.addDataset(dataset)
-        ch._updateXY()
-        ch._updateChart()
+        ch.render()
         self.assertEqual(ch.centerx, 250)
         self.assertEqual(ch.centery, 250)
-        self.assertEqual(ch.radius, 250)
 
         slices = (
             pycha.pie.Slice('dataset1', 0.1, 0, 10, 0),
