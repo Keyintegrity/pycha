@@ -1,4 +1,4 @@
-# Copyright(c) 2007-2009 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -21,8 +21,8 @@ from pycha.color import hex2rgb
 
 class LineChart(Chart):
 
-    def __init__(self, surface=None, options={}):
-        super(LineChart, self).__init__(surface, options)
+    def __init__(self, surface=None, options={}, debug=False):
+        super(LineChart, self).__init__(surface, options, debug)
         self.points = []
 
     def _updateChart(self):
@@ -48,29 +48,36 @@ class LineChart(Chart):
             lastX = None
             if self.options.shouldFill:
                 # Go to the (0,0) coordinate to start drawing the area
-                #cx.move_to(self.area.x, self.area.y + self.area.h)
-                offset = (1.0 - self.area.origin) * self.area.h
-                cx.move_to(self.area.x, self.area.y + offset)
+                #cx.move_to(self.layout.chart.x,
+                #           self.layout.chart.y + self.layout.chart.h)
+                offset = (1.0 - self.origin) * self.layout.chart.h
+                cx.move_to(self.layout.chart.x, self.layout.chart.y + offset)
 
             for point in self.points:
                 if point.name == storeName:
                     if not self.options.shouldFill and firstPoint:
                         # starts the first point of the line
-                        cx.move_to(point.x * self.area.w + self.area.x,
-                                   point.y * self.area.h + self.area.y)
+                        cx.move_to(point.x * self.layout.chart.w
+                                   + self.layout.chart.x,
+                                   point.y * self.layout.chart.h
+                                   + self.layout.chart.y)
                         firstPoint = False
                         continue
-                    cx.line_to(point.x * self.area.w + self.area.x,
-                               point.y * self.area.h + self.area.y)
+                    cx.line_to(point.x * self.layout.chart.w
+                               + self.layout.chart.x,
+                               point.y * self.layout.chart.h
+                               + self.layout.chart.y)
                     # we remember the last X coordinate to close the area
                     # properly. See bug #4
                     lastX = point.x
 
             if self.options.shouldFill:
                 # Close the path to the start point
-                y = (1.0 - self.area.origin) * self.area.h + self.area.y
-                cx.line_to(lastX * self.area.w + self.area.x, y)
-                cx.line_to(self.area.x, y)
+                y = ((1.0 - self.origin) * self.layout.chart.h
+                     + self.layout.chart.y)
+                cx.line_to(lastX * self.layout.chart.w
+                           + self.layout.chart.x, y)
+                cx.line_to(self.layout.chart.x, y)
                 cx.close_path()
             else:
                 cx.set_source_rgb(*self.colorScheme[storeName])

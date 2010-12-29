@@ -1,4 +1,4 @@
-# Copyright(c) 2007-2009 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -21,7 +21,7 @@ import pycha.line
 
 
 def intervalExample():
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     dataSet = (
         ('dataset 1', [(0, 10), (1, 20), (2, 45), (3, 33)]),

@@ -1,4 +1,4 @@
-# Copyright(c) 2007-2009 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -46,8 +46,7 @@ class AreaTests(unittest.TestCase):
         self.assertEqual(area.y, 20)
         self.assertEqual(area.w, 100)
         self.assertEqual(area.h, 300)
-        self.assertEqual(area.origin, 0.0)
-        msg = "<pycha.chart.Area@(10.00, 20.00) 100.00 x 300.00 Origin: 0.00>"
+        msg = "<pycha.chart.Area@(10.00, 20.00) 100.00 x 300.00>"
         self.assertEqual(str(area), msg)
 
 
@@ -84,7 +83,7 @@ class ChartTests(unittest.TestCase):
         ch = pycha.chart.Chart(None)
         self.assertEqual(ch.resetFlag, False)
         self.assertEqual(ch.datasets, [])
-        self.assertEqual(ch.area, None)
+        self.assertNotEqual(ch.layout, None)
         self.assertEqual(ch.minxval, None)
         self.assertEqual(ch.maxxval, None)
         self.assertEqual(ch.minyval, None)
@@ -96,6 +95,7 @@ class ChartTests(unittest.TestCase):
         self.assertEqual(ch.xticks, [])
         self.assertEqual(ch.yticks, [])
         self.assertEqual(ch.options, pycha.chart.DEFAULT_OPTIONS)
+        self.assertEqual(ch.origin, 0.0)
 
     def test_datasets(self):
         ch = pycha.chart.Chart(None)
@@ -156,8 +156,6 @@ class ChartTests(unittest.TestCase):
         ch = pycha.chart.Chart(surface, opt)
         ch.addDataset(dataset)
         ch._updateXY()
-        self.assertEqual((ch.area.x, ch.area.y, ch.area.w, ch.area.h),
-                         (10, 10, 480, 480))
         self.assertEqual(ch.minxval, 0.0)
         self.assertEqual(ch.maxxval, 3)
         self.assertEqual(ch.xrange, 3)

@@ -1,4 +1,4 @@
-# Copyright(c) 2007-2009 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -22,8 +22,8 @@ from pycha.utils import safe_unicode
 
 class BarChart(Chart):
 
-    def __init__(self, surface=None, options={}):
-        super(BarChart, self).__init__(surface, options)
+    def __init__(self, surface=None, options={}, debug=False):
+        super(BarChart, self).__init__(surface, options, debug)
         self.bars = []
         self.minxdelta = 0.0
         self.barWidthForSet = 0.0
@@ -64,10 +64,10 @@ class BarChart(Chart):
             cx.set_line_width(ux)
 
             # gather bar proportions
-            x = self.area.x + self.area.w * bar.x
-            y = self.area.y + self.area.h * bar.y
-            w = self.area.w * bar.w
-            h = self.area.h * bar.h
+            x = self.layout.chart.x + self.layout.chart.w * bar.x
+            y = self.layout.chart.y + self.layout.chart.h * bar.y
+            w = self.layout.chart.w * bar.w
+            h = self.layout.chart.h * bar.h
 
             if (w < 1 or h < 1) and self.options.yvals.skipSmallValues:
                 return # don't draw when the bar is too small
@@ -139,9 +139,9 @@ class VerticalBarChart(BarChart):
                 w = self.barWidthForSet
                 h = abs(yval) * self.yscale
                 if yval > 0:
-                    y = (1.0 - h) - self.area.origin
+                    y = (1.0 - h) - self.origin
                 else:
-                    y = 1 - self.area.origin
+                    y = 1 - self.origin
                 rect = Rect(x, y, w, h, xval, yval, name)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
@@ -212,9 +212,9 @@ class HorizontalBarChart(BarChart):
                 h = self.barWidthForSet
                 w = abs(yval) * self.yscale
                 if yval > 0:
-                    x = self.area.origin
+                    x = self.origin
                 else:
-                    x = self.area.origin - w
+                    x = self.origin - w
                 rect = Rect(x, y, w, h, xval, yval, name, yerr)
 
                 if (0.0 <= rect.x <= 1.0) and (0.0 <= rect.y <= 1.0):
@@ -247,8 +247,10 @@ class HorizontalBarChart(BarChart):
     def _renderXAxis(self, cx):
         """Draws the horizontal line representing the X axis"""
         cx.new_path()
-        cx.move_to(self.area.x, self.area.y + self.area.h)
-        cx.line_to(self.area.x + self.area.w, self.area.y + self.area.h)
+        cx.move_to(self.layout.chart.x,
+                   self.layout.chart.y + self.layout.chart.h)
+        cx.line_to(self.layout.chart.x + self.layout.chart.w,
+                   self.layout.chart.y + self.layout.chart.h)
         cx.close_path()
         cx.stroke()
 
@@ -259,10 +261,10 @@ class HorizontalBarChart(BarChart):
     def _renderYAxis(self, cx):
         # draws the vertical line representing the Y axis
         cx.new_path()
-        cx.move_to(self.area.x + self.area.origin * self.area.w,
-                   self.area.y)
-        cx.line_to(self.area.x + self.area.origin * self.area.w,
-                   self.area.y + self.area.h)
+        cx.move_to(self.layout.chart.x + self.origin * self.layout.chart.w,
+                   self.layout.chart.y)
+        cx.line_to(self.layout.chart.x + self.origin * self.layout.chart.w,
+                   self.layout.chart.y + self.layout.chart.h)
         cx.close_path()
         cx.stroke()
 

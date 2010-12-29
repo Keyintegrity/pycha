@@ -1,4 +1,4 @@
-# Copyright(c) 2007-2009 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -151,7 +151,7 @@ class VerticalBarTests(unittest.TestCase):
         self.assertEqual(ch.maxyval, 5)
         self.assertEqual(ch.yrange, 8)
         self.assertAlmostEqual(ch.yscale, 0.125, 4)
-        self.assertAlmostEqual(ch.area.origin, 0.375)
+        self.assertAlmostEqual(ch.origin, 0.375)
         self.assertEqual(ch.minxdelta, 1)
         self.assertAlmostEqual(ch.barWidthForSet, 0.1875, 4)
         self.assertAlmostEqual(ch.barMargin, 0.03125, 4)
@@ -286,7 +286,7 @@ class HorizontalBarTests(unittest.TestCase):
         self.assertEqual(ch.maxyval, 5)
         self.assertEqual(ch.yrange, 8)
         self.assertAlmostEqual(ch.yscale, 0.125, 4)
-        self.assertAlmostEqual(ch.area.origin, 0.375)
+        self.assertAlmostEqual(ch.origin, 0.375)
         self.assertEqual(ch.minxdelta, 1)
         self.assertAlmostEqual(ch.barWidthForSet, 0.1875, 4)
         self.assertAlmostEqual(ch.barMargin, 0.03125, 4)

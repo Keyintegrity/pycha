@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2008 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -21,7 +21,7 @@ import pycha.stackedbar
 
 
 def barChart(output):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 600, 300)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     downloads = (('0.1.0', 193),
                  ('0.2.0', 567),
@@ -58,10 +58,6 @@ def barChart(output):
             'args': {
                 'initialColor': 'green',
             },
-        },
-        'padding': {
-            'left': 75,
-            'bottom': 55,
         },
         'legend': {
             'position': {

@@ -1,4 +1,4 @@
-# Copyright(c) 2007-2008 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #              2009 by Yaco S.L. <lgs@yaco.es>
 #
 # This file is part of PyCha.

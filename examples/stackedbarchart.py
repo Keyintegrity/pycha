@@ -1,4 +1,4 @@
-# Copyright (c) 2009 by Yaco S.L.
+# Copyright(c) 2009-2010 by Yaco S.L. <lgs@yaco.es>
 #
 # This file is part of PyCha.
 #
@@ -23,7 +23,7 @@ import pycha.stackedbar
 
 
 def stackedBarChart(output, chartFactory):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     dataSet = (
         ('internal', [(0, 8), (1, 10), (2, 5), (3, 6)]),
@@ -44,10 +44,6 @@ def stackedBarChart(output, chartFactory):
         },
         'legend': {
             'hide': True,
-        },
-        'padding': {
-            'left': 75,
-            'bottom': 55,
         },
         'title': 'Sample Chart'
     }

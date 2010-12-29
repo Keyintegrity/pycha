@@ -1,4 +1,4 @@
-# Copyright (c) 2009 by Yaco S.L. <lgs@yaco.es>
+# Copyright (c) 2009-2010 by Yaco S.L. <lgs@yaco.es>
 #
 # This file is part of PyCha.
 #

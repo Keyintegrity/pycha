@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2008 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -24,7 +24,7 @@ import pycha.line
 from lines import lines
 
 def lineChart(output):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     dataSet = (
         ('lines', [(i, l[1]) for i, l in enumerate(lines)]),
@@ -52,10 +52,6 @@ def lineChart(output):
         'legend': {
             'hide': True,
         },
-        'padding': {
-            'left': 55,
-            'bottom': 40,
-        }
     }
     chart = pycha.line.LineChart(surface, options)
 

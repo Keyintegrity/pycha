@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2008 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
+# Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
 #
@@ -23,8 +23,9 @@ import pycha.bar
 
 from lines import lines
 
+
 def barChart(output, chartFactory):
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 200)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
 
     dataSet = (
         ('lines', [(i, l[1]) for i, l in enumerate(lines)]),
@@ -58,8 +59,8 @@ def barChart(output, chartFactory):
             'hide': True,
         },
         'padding': {
-            'left': 75,
-            'bottom': 55,
+            'left': 0,
+            'bottom': 0,
         },
         'title': 'Sample Chart'
     }
