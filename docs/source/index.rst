@@ -6,10 +6,19 @@
 Welcome to Pycha's documentation!
 =================================
 
+:Author: Lorenzo Gil Sánchez <lorenzo.gil.sanchez AT gmail.com>
+:Project website: https://bitbucket.org/lgs/pycha/
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   introduction
+   installation
+   tutorial
+   examples
+   options
 
 Indices and tables
 ==================
