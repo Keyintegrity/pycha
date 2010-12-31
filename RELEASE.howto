@@ -90,8 +90,8 @@ When releasing software, the following steps should be taken:
 
      Initial release as separate egg.
 
-8. If this is a non bug fix release, write the release notes at
-   http://www.lorenzogil.com/projects/pycha/wiki/ReleaseNotes/
+8. If this is a non bug fix release, write the release notes and upload
+   them to http://pypi.python.org/pypi?%3Aaction=pkg_edit&name=pycha
 
 **Important:** Once released to PyPI or any other public download
 location, a released egg may *never* be removed, even if it has proven
