@@ -19,6 +19,7 @@ Contents:
    tutorial
    examples
    options
+   release-notes
 
 Indices and tables
 ==================
