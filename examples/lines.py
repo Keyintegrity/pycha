@@ -18,11 +18,11 @@
 # common data for several examples
 
 lines = (
-    ('bar.py', 315),
-    ('chart.py', 746),
-    ('color.py', 210),
-    ('line.py', 123),
-    ('pie.py', 210),
+    ('bar.py', 319),
+    ('chart.py', 875),
+    ('color.py', 204),
+    ('line.py', 130),
+    ('pie.py', 352),
     ('scatter.py', 38),
     ('stackedbar.py', 121),
 )
