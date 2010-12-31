@@ -164,3 +164,95 @@ Let's see the output.
    Pie Chart
 
    Example of pie chart found in the Pycha examples directory
+
+
+Line charts
+-----------
+
+The other big type of chart is line charts. As you may guest, in the
+examples directory there is a programm that generates a lines chart, it is
+called ``examples/linechart.py``::
+
+
+  import sys
+
+  import cairo
+
+  import pycha.line
+
+  from lines import lines
+
+  def lineChart(output):
+      surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 400)
+
+      dataSet = (
+          ('lines', [(i, l[1]) for i, l in enumerate(lines)]),
+          )
+
+      options = {
+          'axis': {
+              'x': {
+                  'ticks': [dict(v=i, label=l[0]) for i, l in enumerate(lines)],
+              },
+              'y': {
+                  'tickCount': 4,
+              }
+          },
+          'background': {
+              'color': '#eeeeff',
+              'lineColor': '#444444'
+          },
+          'colorScheme': {
+              'name': 'gradient',
+              'args': {
+                  'initialColor': 'blue',
+              },
+          },
+          'legend': {
+              'hide': True,
+          },
+      }
+      chart = pycha.line.LineChart(surface, options)
+
+      chart.addDataset(dataSet)
+      chart.render()
+
+      surface.write_to_png(output)
+
+  if __name__ == '__main__':
+      if len(sys.argv) > 1:
+          output = sys.argv[1]
+      else:
+          output = 'linechart.png'
+      lineChart(output)
+
+No big surprises in this one neither since the structure is exactly the
+same as in the other examples. Just the chart factory is different.
+
+.. figure:: _static/linechart.png
+   :alt: Line Chart
+
+   Line Chart
+
+   Example of line chart found in the Pycha examples directory
+
+As you can see, by default the area between the line and the x axis is
+filled. You can change this option if you just want to render the line.
+
+
+Other examples
+--------------
+
+There are other chart examples in the ``examples`` directory of the pycha
+source code. I suggest you to check them out to discover other types of
+charts like:
+
+* Error bar charts
+* Scatter charts
+* Stacked bar charts
+
+There are also other examples where you can see special features and options:
+
+* ``svg.py`` will output a SVG vectorial file instead of a PNG one.
+* ``interval.py`` will use the interval option to setup the x axis
+* ``color/colorschemes.py`` will try different color schemes.
