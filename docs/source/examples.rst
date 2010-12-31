@@ -13,7 +13,9 @@ One of the most common used charts are bar charts. In the
 horizontal bar charts::
 
   import sys
+
   import cairo
+
   import pycha.bar
 
   from lines import lines
@@ -100,3 +102,65 @@ Let's see the output of running this programm.
    Horizontal Bar Chart
 
    Example of horizontal bar chart found in the Pycha examples directory
+
+
+Pie charts
+----------
+
+Pie charts are another very common type of charts. They are useful when
+you only have one dataset and you want to compare each piece of information
+with the rest.
+
+Let's see the pie example in the ``examples/piechart.py`` file::
+
+  import sys
+
+  import cairo
+
+  import pycha.pie
+
+  from lines import lines
+
+  def pieChart(output):
+      surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 800)
+
+      dataSet = [(line[0], [[0, line[1]]]) for line in lines]
+
+      options = {
+          'axis': {
+              'x': {
+                  'ticks': [dict(v=i, label=d[0]) for i, d in enumerate(lines)],
+              }
+          },
+          'legend': {
+              'hide': True,
+          },
+          'title': 'Pie Chart',
+      }
+      chart = pycha.pie.PieChart(surface, options)
+
+      chart.addDataset(dataSet)
+      chart.render()
+
+      surface.write_to_png(output)
+
+  if __name__ == '__main__':
+      if len(sys.argv) > 1:
+          output = sys.argv[1]
+      else:
+          output = 'piechart.png'
+      pieChart(output
+
+
+As you can see, this programm is very similar to the ``barchart.py`` one.
+The only remarkable difference is that we are using the ``pycha.pie.PieChart``
+class instead of the bar alternatives.
+
+Let's see the output.
+
+.. figure:: _static/piechart.png
+   :alt: Pie Chart
+
+   Pie Chart
+
+   Example of pie chart found in the Pycha examples directory
