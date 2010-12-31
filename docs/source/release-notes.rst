@@ -25,6 +25,21 @@ learn more abouth the algorithm used in that case in `Lorenzo's blog`_
 
 .. _Lorenzo's blog: http://www.lorenzogil.com/blog/2010/07/26/pie-charts-autopadding/
 
+.. figure:: _static/piechart-no-autopadding.png
+   :alt: Pie chart in 0.5.3
+
+   Pie chart in 0.5.3
+
+   Example of pie chart with padding set to 0 and not autopadding
+
+
+.. figure:: _static/piechart-autopadding.png
+   :alt: Pie chart in 0.6.0
+
+   Pie chart in 0.6.0
+
+   Example of pie chart with padding set to 0 and autopadding
+
 Better documentation
 ^^^^^^^^^^^^^^^^^^^^
 
