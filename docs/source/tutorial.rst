@@ -4,12 +4,16 @@ Tutorial
 
 Using pycha is quite simple. You always follow the same 5 simple steps:
 
-1. Create a Cairo surface to draw the chart on
-2. Build a list of data sets from which your chart will be created
-3. Customize the chart options.
-4. Create the chart, add the datasets and render it
-5. Save the results into a file or do whatever you want with the Cairo
+1. `Creating the Cairo surface`_ to draw the chart on
+2. `Building the data sets`_ from which your chart will be created
+3. `Customizing the options`_ of the chart.
+4. `Creating the actual chart`_, add the datasets and render it
+5. `Saving the result into a file`_ or do whatever you want with the Cairo
    surface
+
+
+Creating the Cairo surface
+--------------------------
 
 To create the Cairo surface you just need to say the type of surface and its
 dimensions::
@@ -17,6 +21,10 @@ dimensions::
    import cairo
    width, height = (500, 400)
    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+
+
+Building the data sets
+----------------------
 
 Then you should create your data set querying a database or any other data
 source::
@@ -35,6 +43,10 @@ Not every chart uses all the information of a data set. For example, the Pie
 chart only uses the first point of each dataset and it only uses the y value of
 the point.
 
+
+Customizing the options
+-----------------------
+
 Now you may want to specify some options so the chart can be customize changing
 its defaults values. To see the defaults you can check the
 pycha.chart.Chart.__init__ method in the source code. You can use regular
@@ -45,6 +57,10 @@ legend and use a different color for the background::
        'legend': {'hide': True},
        'background': {'color': '#f0f0f0'},
    }
+
+
+Creating the actual chart
+-------------------------
 
 Now we are ready to instantiate the chart, add the data set and render it::
 
@@ -63,6 +79,10 @@ Right now you can choose among several different kind of charts:
 * Scatterplot Charts (``pycha.scatter.ScatterplotChart``)
 * Stacked Bar Charts (``pycha.stackedbar.StackedVerticalBarChart`` and
   ``pycha.stackedbar.StackedHorizontalBarChart``)
+
+
+Saving the result into a file
+-----------------------------
 
 Finally you can write the surface to a graphic file or anything you want using
 the cairo library::
