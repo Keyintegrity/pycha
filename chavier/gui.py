@@ -139,6 +139,8 @@ class GUI(object):
                  'Use lines chart', self.app.LINE_TYPE),
                 ('pie', None, '_Pie', None,
                  'Use pie chart', self.app.PIE_TYPE),
+                ('radial', None, '_Radial', None,
+                 'Use radial chart', self.app.RADIAL_TYPE),
                 ('scatter', None, '_Scatter', None,
                  'Use scatter chart', self.app.SCATTER_TYPE),
                 ('stackedverticalbar', None, '_Stacked Vertical bars', None,
@@ -175,6 +177,7 @@ class GUI(object):
       <menuitem action="stackedhorizontalbar"/>
       <menuitem action="line"/>
       <menuitem action="pie"/>
+      <menuitem action="radial"/>
       <menuitem action="scatter"/>
     </menu>
     <menu action="tools">

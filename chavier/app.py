@@ -21,6 +21,7 @@ from pycha.chart import DEFAULT_OPTIONS
 from pycha.bar import HorizontalBarChart, VerticalBarChart
 from pycha.line import LineChart
 from pycha.pie import PieChart
+from pycha.radial import RadialChart
 from pycha.scatter import ScatterplotChart
 from pycha.stackedbar import StackedVerticalBarChart, StackedHorizontalBarChart
 
@@ -34,6 +35,7 @@ class App(object):
         HorizontalBarChart,
         LineChart,
         PieChart,
+        RadialChart,
         ScatterplotChart,
         StackedVerticalBarChart,
         StackedHorizontalBarChart,
@@ -43,6 +45,7 @@ class App(object):
      HORIZONTAL_BAR_TYPE,
      LINE_TYPE,
      PIE_TYPE,
+     RADIAL_TYPE,
      SCATTER_TYPE,
      STACKED_VERTICAL_BAR_TYPE,
      STACKED_HORIZONTAL_BAR_TYPE) = range(len(CHART_TYPES))
