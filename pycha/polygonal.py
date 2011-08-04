@@ -1,7 +1,5 @@
 # Copyright(c) 2011 by Roberto Garcia Carvajal <roberpot@gmail.com>
 #
-# Based on PyCha sources by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
-#
 # This file is part of PyCha.
 #
 # PyCha is free software: you can redistribute it and/or modify
@@ -17,9 +15,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
-import cairo
+import math
 
-from math import pi, cos, sin
+import cairo
 
 from pycha.chart import Chart
 from pycha.color import hex2rgb
@@ -33,7 +31,7 @@ class PolygonalChart(Chart):
         self.points = []
 
     def _updateChart(self):
-        """Evaluates measures for line charts"""
+        """Evaluates measures for polygonal charts"""
         self.points = []
 
         for i, (name, store) in enumerate(self.datasets):
@@ -59,47 +57,18 @@ class PolygonalChart(Chart):
 
         if self.options.background.chartColor:
             cx.set_source_rgb(*hex2rgb(self.options.background.chartColor))
-            cx.rectangle(self.area.x, self.area.y, self.area.w, self.area.h)
-            cx.fill()
-
-        if self.options.background.lineColor:
-            cx.set_source_rgb(*hex2rgb(self.options.background.lineColor))
-            cx.set_line_width(self.options.axis.lineWidth)
-            self._renderLines(cx)
-
-        cx.restore()
-
-    def _renderBackground(self, cx):
-        """Renders the background area of the chart"""
-        if self.options.background.hide:
-            return
-
-        cx.save()
-        
-        """ # Es necesario dibujar el contorno?
-        cx.set_line_width(1.0)
-        cx.save()
-        cx.arc(self.area.x + self.area.w / 2,self.area.y + self.area.h / 2, self.area.h / 2, 0, 2*3.141592)
-        cx.stroke()
-        """
-        centerx = self.area.x + self.area.w / 2
-        centery = self.area.y + self.area.h / 2
-        rad = self.area.h / 2
-        count = len(self.xticks)
-        
-        if self.options.background.baseColor:
-            cx.set_source_rgb(*hex2rgb(self.options.background.baseColor))
-            cx.paint()
-
-        if self.options.background.chartColor:
-            cx.set_source_rgb(*hex2rgb(self.options.background.chartColor))
             cx.set_line_width(10.0)
             cx.new_path()
             init = None
+            count = len(self.xticks)
             for index, tick in enumerate(self.xticks):
-                ang = pi / 2 - index * 2 * pi / count
-                x = centerx - cos(ang) * rad
-                y = centery - sin(ang) * rad
+                ang = math.pi / 2 - index * 2 * math.pi / count
+                x = (self.layout.chart.x + self.layout.chart.w / 2
+                     - math.cos(ang)
+                     * min(self.layout.chart.w / 2, self.layout.chart.h / 2))
+                y = (self.layout.chart.y + self.layout.chart.h / 2
+                     - math.sin(ang)
+                     * min(self.layout.chart.w / 2, self.layout.chart.h / 2))
                 if init is None:
                     cx.move_to(x, y)
                     init = (x, y)
@@ -115,19 +84,20 @@ class PolygonalChart(Chart):
             self._renderLines(cx)
 
         cx.restore()
-        
+
     def _renderLine(self, cx, tick, horiz):
         """Aux function for _renderLines"""
 
-        rad = (self.area.h/ 2) * (1 - tick[0])
-        centerx = self.area.x + self.area.w / 2
-        centery = self.area.y + self.area.h / 2
+        rad = (self.layout.chart.h / 2) * (1 - tick[0])
+        cx.new_path()
         init = None
         count = len(self.xticks)
-        for index, xtick in enumerate(self.xticks):
-            ang = pi / 2 - index * 2 * pi / count
-            x = centerx - cos(ang) * rad
-            y = centery - sin(ang) * rad
+        for index, tick in enumerate(self.xticks):
+            ang = math.pi / 2 - index * 2 * math.pi / count
+            x = (self.layout.chart.x + self.layout.chart.w / 2
+                 - math.cos(ang) * rad)
+            y = (self.layout.chart.y + self.layout.chart.h / 2
+                 - math.sin(ang) * rad)
             if init is None:
                 cx.move_to(x, y)
                 init = (x, y)
@@ -136,46 +106,46 @@ class PolygonalChart(Chart):
         cx.line_to(init[0], init[1])
         cx.close_path()
         cx.stroke()
-            
+
     def _renderXAxis(self, cx):
         """Draws the horizontal line representing the X axis"""
-        
+
         count = len(self.xticks)
-        
-        centerx = self.area.x + self.area.w / 2
-        centery = self.area.y + self.area.h / 2
-        
+
+        centerx = self.layout.chart.x + self.layout.chart.w / 2
+        centery = self.layout.chart.y + self.layout.chart.h / 2
+
         for i in range(0, count):
-            offset1 = i * 2 * pi / count
-            offset = pi / 2 - offset1
-            
-            rad = self.area.h / 2
+            offset1 = i * 2 * math.pi / count
+            offset = math.pi / 2 - offset1
+
+            rad = self.layout.chart.h / 2
             (r1, r2) = (0, rad + 5)
-            
-            x1 = centerx - cos(offset) * r1
-            x2 = centerx - cos(offset) * r2
-            y1 = centery - sin(offset) * r1
-            y2 = centery - sin(offset) * r2
-            
+
+            x1 = centerx - math.cos(offset) * r1
+            x2 = centerx - math.cos(offset) * r2
+            y1 = centery - math.sin(offset) * r1
+            y2 = centery - math.sin(offset) * r2
+
             cx.new_path()
             cx.move_to(x1, y1)
             cx.line_to(x2, y2)
             cx.close_path()
             cx.stroke()
-            
+
     def _renderYTick(self, cx, tick, center):
         """Aux method for _renderAxis"""
 
         i = tick
         tick = self.yticks[i]
-        
+
         count = len(self.yticks)
 
         if callable(tick):
             return
 
         x = center[0]
-        y = center[1] - i * (self.area.h / 2) / count
+        y = center[1] - i * (self.layout.chart.h / 2) / count
 
         cx.new_path()
         cx.move_to(x, y)
@@ -202,7 +172,7 @@ class PolygonalChart(Chart):
                        + labelHeight / (2.0 / math.cos(radians)))
             cx.rotate(-radians)
             cx.show_text(label)
-            cx.rotate(radians) # this is probably faster than a save/restore
+            cx.rotate(radians)  # this is probably faster than a save/restore
         else:
             cx.move_to(x - self.options.axis.tickSize - labelWidth - 4,
                        y + labelHeight / 2.0)
@@ -212,24 +182,24 @@ class PolygonalChart(Chart):
         return label
 
     def _renderYAxis(self, cx):
-        """Draws the vertical line represeting the Y axis"""
-        
-        centerx = self.area.x + self.area.w / 2
-        centery = self.area.y + self.area.h / 2
-        
-        offset = pi / 2
-        
-        r1 = self.area.h / 2
-        
-        x1 = centerx - cos(offset) * r1
-        y1 = centery - sin(offset) * r1
-        
+        """Draws the vertical line for the Y axis"""
+
+        centerx = self.layout.chart.x + self.layout.chart.w / 2
+        centery = self.layout.chart.y + self.layout.chart.h / 2
+
+        offset = math.pi / 2
+
+        r1 = self.layout.chart.h / 2
+
+        x1 = centerx - math.cos(offset) * r1
+        y1 = centery - math.sin(offset) * r1
+
         cx.new_path()
         cx.move_to(centerx, centery)
         cx.line_to(x1, y1)
         cx.close_path()
         cx.stroke()
-        
+
     def _renderAxis(self, cx):
         """Renders axis"""
         if self.options.axis.x.hide and self.options.axis.y.hide:
@@ -238,17 +208,16 @@ class PolygonalChart(Chart):
         cx.save()
         cx.set_source_rgb(*hex2rgb(self.options.axis.lineColor))
         cx.set_line_width(self.options.axis.lineWidth)
-        
-        centerx = self.area.x + self.area.w / 2
-        centery = self.area.y + self.area.h / 2
+
+        centerx = self.layout.chart.x + self.layout.chart.w / 2
+        centery = self.layout.chart.y + self.layout.chart.h / 2
 
         if not self.options.axis.y.hide:
             if self.yticks:
-            
+
                 count = len(self.yticks)
-                
+
                 for i in range(0, count):
-                    tick = self.yticks[i]
                     self._renderYTick(cx, i, (centerx, centery))
 
             if self.options.axis.y.label:
@@ -259,11 +228,10 @@ class PolygonalChart(Chart):
         if not self.options.axis.x.hide:
             fontAscent = cx.font_extents()[0]
             if self.xticks:
-            
+
                 count = len(self.xticks)
-                
+
                 for i in range(0, count):
-                    tick = self.xticks[i]
                     self._renderXTick(cx, i, fontAscent, (centerx, centery))
 
             if self.options.axis.x.label:
@@ -272,29 +240,13 @@ class PolygonalChart(Chart):
             self._renderXAxis(cx)
 
         cx.restore()
-        
+
     def _renderXTick(self, cx, i, fontAscent, center):
         tick = self.xticks[i]
         if callable(tick):
             return
 
         count = len(self.xticks)
-        #import ipdb
-        #ipdb.set_trace()
-        #print (cx, tick)
-
-
-        """
-        x = self.area.x + tick[0] * self.area.w
-        y = self.area.y + self.area.h
-
-        cx.new_path()
-        cx.move_to(x, y)
-        cx.line_to(x, y + self.options.axis.tickSize)
-        cx.close_path()
-        cx.stroke()
-        """
-        
         cx.select_font_face(self.options.axis.tickFont,
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_NORMAL)
@@ -304,8 +256,9 @@ class PolygonalChart(Chart):
         extents = cx.text_extents(label)
         labelWidth = extents[2]
         labelHeight = extents[3]
-        
-        cx.move_to(center[0], center[1])
+
+        x, y = center
+        cx.move_to(x, y)
 
         if self.options.axis.x.rotate:
             radians = math.radians(self.options.axis.x.rotate)
@@ -317,92 +270,72 @@ class PolygonalChart(Chart):
             cx.show_text(label)
             cx.rotate(-radians)
         else:
-            
-            offset1 = i * 2 * pi / count
-            offset = pi / 2 - offset1
-            
-            rad = self.area.h / 2 + 10
-            
-            x = center[0] - cos(offset) * rad
-            y = center[1] - sin(offset) * rad            
+            offset1 = i * 2 * math.pi / count
+            offset = math.pi / 2 - offset1
+
+            rad = self.layout.chart.h / 2 + 10
+
+            x = center[0] - math.cos(offset) * rad
+            y = center[1] - math.sin(offset) * rad
 
             cx.move_to(x, y)
-            cx.rotate(offset - pi / 2)
-            
-            
-            if sin(offset) < 0.0:
-                cx.rotate(pi)
+            cx.rotate(offset - math.pi / 2)
+
+            if math.sin(offset) < 0.0:
+                cx.rotate(math.pi)
                 cx.rel_move_to(0.0, 5.0)
-            
+
             cx.rel_move_to(-labelWidth / 2.0, 0)
-            """
-            cx.move_to(x - labelWidth / 2.0,
-                       y + self.options.axis.tickSize
-                       + fontAscent + 4.0)
-            """
             cx.show_text(label)
-            if sin(offset) < 0.0:
-                cx.rotate(-pi)
-            
-            cx.rotate(-(offset - pi / 2))
+            if math.sin(offset) < 0.0:
+                cx.rotate(-math.pi)
+
+            cx.rotate(-(offset - math.pi / 2))
         return label
-        
+
     def _renderChart(self, cx):
         """Renders a line chart"""
-        # Dibujamos el circulo.
+        # draw the polygon.
         def preparePath(storeName):
             cx.new_path()
             firstPoint = True
-            lastX = None
-            #if self.options.shouldFill:
-                # Go to the (0,0) coordinate to start drawing the area
-                #cx.move_to(self.area.x, self.area.y + self.area.h)
-            #    offset = (1.0 - self.area.origin) * self.area.h
-            #    cx.move_to(self.area.x, self.area.y + offset)
-            
+
             count = len(self.points) / len(self.datasets)
-            centerx = self.area.x + self.area.w / 2
-            centery = self.area.y + self.area.h / 2
-            
+            centerx = self.layout.chart.x + self.layout.chart.w / 2
+            centery = self.layout.chart.y + self.layout.chart.h / 2
+
             firstPointCoord = None
-            
-            #print (self.area.x, self.area.y, self.area.w, self.area.h, count)
+
             for index, point in enumerate(self.points):
                 if point.name == storeName:
-                    offset1 = index * 2 * pi / count
-                    offset = pi / 2 - offset1
-                
-                    rad = (self.area.h / 2) * (1 - point.y)
-            
-                    x = centerx - cos(offset) * rad
-                    y = centery - sin(offset) * rad
-                    
+                    offset1 = index * 2 * math.pi / count
+                    offset = math.pi / 2 - offset1
+
+                    rad = (self.layout.chart.h / 2) * (1 - point.y)
+
+                    x = centerx - math.cos(offset) * rad
+                    y = centery - math.sin(offset) * rad
+
                     if firstPointCoord is None:
                         firstPointCoord = (x, y)
-                    
+
                     if not self.options.shouldFill and firstPoint:
                         # starts the first point of the line
                         cx.move_to(x, y)
                         firstPoint = False
                         continue
                     cx.line_to(x, y)
-                    # we remember the last X coordinate to close the area
-                    # properly. See bug #4
-                    lastX = point.x
-            
+
             if not firstPointCoord is None:
                 cx.line_to(firstPointCoord[0], firstPointCoord[1])
 
             if self.options.shouldFill:
                 # Close the path to the start point
-                y = (1.0 - self.area.origin) * self.area.h + self.area.y
-                #cx.line_to(lastX * self.area.w + self.area.x, y)
-                #cx.line_to(self.area.x, y)
-                #cx.close_path()
+                y = ((1.0 - self.origin)
+                     * self.layout.chart.h + self.layout.y)
             else:
                 cx.set_source_rgb(*self.colorScheme[storeName])
                 cx.stroke()
-
 
         cx.save()
         cx.set_line_width(self.options.stroke.width)
@@ -436,8 +369,7 @@ class PolygonalChart(Chart):
             for key in self._getDatasetsKeys():
                 preparePath(key)
         cx.restore()
-        
-        
+
 
 class Point(object):
 
