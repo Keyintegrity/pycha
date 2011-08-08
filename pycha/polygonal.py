@@ -294,7 +294,7 @@ class PolygonalChart(Chart):
         return label
 
     def _renderChart(self, cx):
-        """Renders a line chart"""
+        """Renders a polygonal chart"""
         # draw the polygon.
         def preparePath(storeName):
             cx.new_path()
