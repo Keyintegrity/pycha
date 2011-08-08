@@ -20,6 +20,7 @@ import math
 import cairo
 
 from pycha.chart import Chart
+from pycha.line import Point
 from pycha.color import hex2rgb
 from pycha.utils import safe_unicode
 
@@ -343,14 +344,3 @@ class RadialChart(Chart):
             for key in self._getDatasetsKeys():
                 preparePath(key)
         cx.restore()
-
-
-class Point(object):
-
-    def __init__(self, x, y, xval, yval, name):
-        self.x, self.y = x, y
-        self.xval, self.yval = xval, yval
-        self.name = name
-
-    def __str__(self):
-        return "<pycha.line.Point@(%.2f, %.2f)>" % (self.x, self.y)
