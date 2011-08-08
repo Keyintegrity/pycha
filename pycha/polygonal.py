@@ -332,7 +332,7 @@ class PolygonalChart(Chart):
             if self.options.shouldFill:
                 # Close the path to the start point
                 y = ((1.0 - self.origin)
-                     * self.layout.chart.h + self.layout.y)
+                     * self.layout.chart.h + self.layout.chart.y)
             else:
                 cx.set_source_rgb(*self.colorScheme[storeName])
                 cx.stroke()
