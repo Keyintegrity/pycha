@@ -7,7 +7,8 @@ Welcome to Pycha's documentation!
 =================================
 
 :Author: Lorenzo Gil Sánchez <lorenzo.gil.sanchez AT gmail.com>
-:Project website: https://bitbucket.org/lgs/pycha/
+:Website: https://bitbucket.org/lgs/pycha/
+:Release: |release|
 
 Contents:
 
