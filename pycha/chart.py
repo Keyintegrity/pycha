@@ -434,6 +434,8 @@ class Chart(object):
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
         cx.set_font_size(self.options.axis.labelFontSize)
+        cx.set_source_rgb(*hex2rgb(self.options.axis.labelColor))
+
         xb, yb, width, height, xa, ya = cx.text_extents(label)
 
         if vertical:
