@@ -61,7 +61,6 @@ class App(object):
             labelColor=str,
             labelFont=str,
             labelFontSize=int,
-            labelWidth=float,
             tickFont=str,
             tickFontSize=int,
             x=dict(

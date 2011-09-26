@@ -797,7 +797,6 @@ DEFAULT_OPTIONS = Option(
         labelColor='#666666',
         labelFont='Tahoma',
         labelFontSize=9,
-        labelWidth=50.0,
         tickFont='Tahoma',
         tickFontSize=9,
         x=Option(
