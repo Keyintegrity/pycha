@@ -6,7 +6,7 @@ This is the list of options supported by Pycha. These options are defined
 in a dictionary and passed to the chart constructor as the second argument.
 
 In the following reference each option name is the key path in the options
-dictionary. So if an option is named 'foo.bar', to set that option in the
+dictionary. So if an option is named *foo.bar*, to set that option in the
 options dictionary, you should create a nested dictionary::
 
  options = {
@@ -14,12 +14,12 @@ options dictionary, you should create a nested dictionary::
      'bar': 1.0,
    }
 
-In this example we set the option 'foo.bar' the value 1.0.
+In this example we set the option *foo.bar* the value 1.0.
 
 Some options can have a None value. In this case the option is considered to
 be unseted.
 
-Using the Chavier application is a great way to discover how an option
+Using the *Chavier* application is a great way to discover how an option
 affect the final chart.
 
 Axis options
@@ -28,52 +28,53 @@ Axis options
 The following options affect how both axes are rendered.
 
 **axis.lineWidth**
-  * Description:
+  * Description: width for both axis lines.
   * Type: float
   * Default: 1.0
 
 **axis.lineColor**
-  * Description:
+  * Description: color for both axis lines.
   * Type: color
   * Default: '#0f0000'
 
 **axis.tickSize**
-  * Description:
+  * Description: length of the ticks for both axis lines.
   * Type: float
   * Default: 3.0
 
 **axis.labelColor**
-  * Description:
+  * Description: color of the axis label for both axis. This option has no
+    effect if either the axis.x.label or axis.y.label are not set (which is
+    the default).
   * Type: color
   * Default: '#666666'
 
 **axis.labelFont**
-  * Description:
+  * Description: font of the axis label for both axis. This option has no
+    effect if either the axis.x.label or axis.y.label are not set (which is
+    the default).
   * Type: string
   * Default: 'Tahoma'
 
 **axis.labelFontSize**
-  * Description:
+  * Description: font size in points of the axis label for both axis. This
+    option has no effect if either the axis.x.label or axis.y.label are not
+    set (which is the default).
   * Type: integer
   * Default: 9
 
-**axis.labelWidth**
-  * Description:
-  * Type: float
-  * Default: 50.0
-
 **axis.tickFont**
-  * Description:
+  * Description: font family for tick texts.
   * Type: string
   * Default: 'Tahoma'
 
 **axis.tickFontSize**
-  * Description:
+  * Description: font size in points for tick texts.
   * Type: integer
   * Default: 9
 
 **axis.x.hide**
-  * Description:
+  * Description: True if the x axis should be hidden. False otherwise.
   * Type: boolean
   * Default: False
 
@@ -98,12 +99,13 @@ The following options affect how both axes are rendered.
   * Default: None
 
 **axis.x.rotate**
-  * Description:
-  * Type: list
+  * Description: clockwise angle in degrees for the tick texts rotation or
+    None for no rotation.
+  * Type: float
   * Default: None
 
 **axis.x.label**
-  * Description:
+  * Description: text that will appear under the axis.
   * Type: string
   * Default: None
 
