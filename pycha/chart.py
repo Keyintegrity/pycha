@@ -554,7 +554,12 @@ class Chart(object):
         width = 0
         height = padding
         keys = self._getDatasetsKeys()
+        cx.select_font_face(self.options.legend.legendFont,
+                            cairo.FONT_SLANT_NORMAL,
+                            cairo.FONT_WEIGHT_NORMAL)
+        cx.set_font_size(self.options.legend.legendFontSize)
         for key in keys:
+            key = safe_unicode(key, self.options.encoding)
             extents = cx.text_extents(key)
             width = max(extents[2], width)
             height += max(extents[3], bullet) + padding
@@ -834,6 +839,8 @@ DEFAULT_OPTIONS = Option(
         borderColor='#000000',
         borderWidth=2,
         hide=False,
+        legendFont='Tahoma',
+        legendFontSize=9,
         position=Option(top=20, left=40, bottom=None, right=None),
     ),
     padding=Option(
