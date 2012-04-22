@@ -75,7 +75,7 @@ Right now you can choose among several different kind of charts:
 * Pie Charts (``pycha.pie.PieChart``)
 * Bar Charts (``pycha.bar.VerticalBarChart`` and
   ``pycha.bar.HorizontalBarChart``)
-* Line Charts (``pycha.bar.LineChart``)
+* Line Charts (``pycha.line.LineChart``)
 * Scatterplot Charts (``pycha.scatter.ScatterplotChart``)
 * Stacked Bar Charts (``pycha.stackedbar.StackedVerticalBarChart`` and
   ``pycha.stackedbar.StackedHorizontalBarChart``)
