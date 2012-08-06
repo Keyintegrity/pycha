@@ -15,7 +15,7 @@ PyCairo:
    program instructions)
 3. Put the Cairo dlls inside the pycairo directory inside your site-packages
    directory or anywhere in your path. You can find the dlls at
-   http://www.gimp.org/%7Etml/gimp/win32/downloads.html Go there and download
+   http://www.gtk.org/download/win32.php Go there and download
    the following packages:
 
    1. cairo.zip. You just need the libcairo-2.dll file inside that zip
