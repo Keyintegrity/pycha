@@ -38,17 +38,19 @@ class RingChart(Chart):
 
     def _updateChart(self):
         """Evaluates measures for pie charts"""
-        self.rings = [i 
+        self.rings = [i
                       for i in set(
-                      [data[0] 
-                        for dataset in self.datasets 
+                      [data[0]
+                        for dataset in self.datasets
                         for data in dataset[1]])]
 
         self.nrings = len(self.rings)
-        
-        self.dataset_names = [i for i in set([data[0] for data in self.datasets])]
-        self.dataset_order = {val: i for i, val in enumerate(self.dataset_names)}
-        
+
+        self.dataset_names = [i for i in
+                              set([data[0] for data in self.datasets])]
+        self.dataset_order = {val: i
+            for i, val in enumerate(self.dataset_names)}
+
         slices = {i: list() for i in self.rings}
 
         for dataset in self.datasets:
@@ -60,11 +62,11 @@ class RingChart(Chart):
                     dict(name=dataset_name, value=dataset_value))
 
         s = dict()
-        
+
         for i in self.rings:
             s[i] = float(sum(slice['value'] for slice in slices[i]))
-        
-        for i in self.rings:    
+
+        for i in self.rings:
             fraction = angle = 0.0
             self.slices[i] = list()
             for slice in slices[i]:
@@ -72,7 +74,7 @@ class RingChart(Chart):
                     angle += fraction
                     fraction = slice['value'] / s[i]
                     self.slices[i].append(
-                        Slice(slice['name'], fraction, i, slice['value'], 
+                        Slice(slice['name'], fraction, i, slice['value'],
                         angle))
 
     def _updateTicks(self):
@@ -138,7 +140,7 @@ class RingChart(Chart):
                         cx.set_source_rgb(*hex2rgb(self.options.stroke.color))
                         cx.stroke()
             radius = radius - radius_dec
-        
+
         cx.new_path()
         cx.move_to(self.centerx, self.centery)
         cx.arc(self.centerx, self.centery, radius, 0, 360)
@@ -189,7 +191,7 @@ class RingChart(Chart):
         radius = self.layout.radius
         radius_inc = radius / (self.nrings + 1)
         current_radius = self.centery + radius_inc + radius_inc / 2
-        
+
         for i, tick in enumerate(self.xticks):
             label = tick[1]
             cx.move_to(self.centerx, current_radius)
@@ -260,16 +262,11 @@ class RingLayout(Layout):
                                         options.titleFontSize,
                                         options.encoding)[1]
 
-        #lookup = dict([(slice.xval, slice) for slice in self.slices])
-
         self.chart.x = self.title.x
         self.chart.y = self.title.y + self.title.h
         self.chart.w = self.title.w
         self.chart.h = height - self.title.h - (options.padding.top
                                                 + options.padding.bottom)
-
-        centerx = self.chart.x + self.chart.w * 0.5
-        centery = self.chart.y + self.chart.h * 0.5
 
         self.radius = min(self.chart.w / 2.0, self.chart.h / 2.0)
 

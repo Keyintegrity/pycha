@@ -22,24 +22,27 @@ import cairo
 import pycha.ring
 
 lines = (
-    ('bar.py', 219, 201),
-    ('chart.py', 975, 450),
-    ('color.py', 104, 300),
-    ('line.py', 230, 100),
-    ('pie.py', 452, 100),
-    ('scatter.py', 138, 500),
-    ('stackedbar.py', 21, 110),
+    ('bar.py', 219, 201, 31),
+    ('chart.py', 975, 450, 341),
+    ('color.py', 104, 300, 200),
+    ('line.py', 230, 100, 450),
+    ('pie.py', 452, 100, 304),
+    ('scatter.py', 138, 500, 200),
+    ('stackedbar.py', 21, 110, 200),
 )
+
 
 def ringChart(output):
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 800, 800)
 
-    dataSet = [(line[0], [[0, line[1]], [1, line[2]],[2, line[1]]]) for line in lines]
+    dataSet = [(line[0], [[0, line[1]], [1, line[2]], [2, line[3]]])
+        for line in lines]
 
     options = {
         'axis': {
             'x': {
-                'ticks': [dict(v=i, label=d) for i, d in enumerate(['2010', '2011', '2012'])],
+                'ticks': [dict(v=i, label=d) for i, d in
+                    enumerate(['2010', '2011', '2012'])],
             }
         },
         'legend': {
