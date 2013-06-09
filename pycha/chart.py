@@ -765,8 +765,8 @@ class Layout(object):
                 max_width, max_height = max(widths), max(heights)
                 if axis.rotate:
                     radians = math.radians(axis.rotate)
-                    sin = math.sin(radians)
-                    cos = math.cos(radians)
+                    sin = abs(math.sin(radians))
+                    cos = abs(math.cos(radians))
                     max_width, max_height = (
                         max_width * cos + max_height * sin,
                         max_width * sin + max_height * cos,
