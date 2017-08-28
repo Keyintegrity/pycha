@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import unicode_literals
+from future.builtins import range
 import unittest
 
 import pycha.color
@@ -91,7 +93,7 @@ class ColorTests(unittest.TestCase):
                           pycha.color.ColorScheme.getColorScheme('foo'))
 
     def test_FixedColorScheme(self):
-        keys = range(3)
+        keys = list(range(3))
         colors = ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0))
         scheme = pycha.color.FixedColorScheme(keys, colors)
         self._assertColors(scheme[0], (1.0, 0.0, 0.0), 1)
@@ -99,7 +101,7 @@ class ColorTests(unittest.TestCase):
         self._assertColors(scheme[2], (0.0, 0.0, 1.0), 3)
 
     def test_GradientColorScheme(self):
-        keys = range(5)
+        keys = list(range(5))
         scheme = pycha.color.GradientColorScheme(keys, "#000000")
         self._assertColors(scheme[0], (0.0, 0.0, 0.0), 3)
         self._assertColors(scheme[1], (0.1, 0.1, 0.1), 3)
@@ -114,7 +116,7 @@ class ColorTests(unittest.TestCase):
         """
         # we have a lot of keys
         n = 50
-        keys = range(n)
+        keys = list(range(n))
         color = '#ff0000'
         scheme = pycha.color.GradientColorScheme(keys, color)
 
@@ -127,7 +129,7 @@ class ColorTests(unittest.TestCase):
         self.assertNotAlmostEqual(color[2], 1.0, 4)
 
     def test_RainbowColorScheme(self):
-        keys = range(5)
+        keys = list(range(5))
         scheme = pycha.color.GradientColorScheme(keys, "#ff0000")
         self._assertColors(scheme[0], (1.0, 0.0, 0.0), 3)
         self._assertColors(scheme[1], (1.0, 0.1, 0.1), 3)

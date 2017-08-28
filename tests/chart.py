@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import unicode_literals
+from future.builtins import str, range
 import unittest
 
 import cairo
@@ -25,16 +28,16 @@ import pycha.chart
 class FunctionsTests(unittest.TestCase):
 
     def test_uniqueIndices(self):
-        arr = (range(10), range(5), range(20), range(30))
-        self.assertEqual(pycha.chart.uniqueIndices(arr), range(30))
+        arr = (list(range(10)), list(range(5)), list(range(20)), list(range(30)))
+        self.assertEqual(pycha.chart.uniqueIndices(arr), list(range(30)))
 
-        arr = (range(30), range(20), range(5), range(10))
-        self.assertEqual(pycha.chart.uniqueIndices(arr), range(30))
+        arr = (list(range(30)), list(range(20)), list(range(5)), list(range(10)))
+        self.assertEqual(pycha.chart.uniqueIndices(arr), list(range(30)))
 
-        arr = (range(4), )
-        self.assertEqual(pycha.chart.uniqueIndices(arr), range(4))
+        arr = (list(range(4)), )
+        self.assertEqual(pycha.chart.uniqueIndices(arr), list(range(4)))
 
-        arr = (range(0), )
+        arr = (list(range(0)), )
         self.assertEqual(pycha.chart.uniqueIndices(arr), [])
 
 

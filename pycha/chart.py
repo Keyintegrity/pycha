@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import unicode_literals
+from future.builtins import str, zip, range, object
+from future.utils import iteritems
 import copy
 import inspect
 import math
@@ -140,7 +144,7 @@ class Chart(object):
         # Remove invalid args before calling the constructor
         kwargs = dict(self.options.colorScheme.args)
         validArgs = inspect.getargspec(colorSchemeClass.__init__)[0]
-        kwargs = dict([(k, v) for k, v in kwargs.items() if k in validArgs])
+        kwargs = dict([(k, v) for k, v in iteritems(kwargs) if k in validArgs])
         self.colorScheme = colorSchemeClass(keys, **kwargs)
 
     def _initSurface(self, surface):
@@ -243,7 +247,7 @@ class Chart(object):
                 pos = self.xscale * (label - self.minxval)
 
         elif self.options.axis.x.tickCount > 0:
-            uniqx = range(len(uniqueIndices(stores)) + 1)
+            uniqx = list(range(len(uniqueIndices(stores)) + 1))
             roughSeparation = self.xrange / self.options.axis.x.tickCount
             i = j = 0
             while i < len(uniqx) and j < self.options.axis.x.tickCount:
@@ -611,7 +615,7 @@ class Chart(object):
 
 def uniqueIndices(arr):
     """Return a list with the indexes of the biggest element of arr"""
-    return range(max([len(a) for a in arr]))
+    return list(range(max([len(a) for a in arr])))
 
 
 class Area(object):
@@ -762,7 +766,7 @@ class Layout(object):
                         ))[2:4] # get width and height as a tuple
                        for tick in ticks]
             if extents:
-                widths, heights = zip(*extents)
+                widths, heights = list(zip(*extents))
                 max_width, max_height = max(widths), max(heights)
                 if axis.rotate:
                     radians = math.radians(axis.rotate)
@@ -780,14 +784,14 @@ class Option(dict):
     """Useful dict that allow attribute-like access to its keys"""
 
     def __getattr__(self, name):
-        if name in self.keys():
+        if name in self:
             return self[name]
         else:
             raise AttributeError(name)
 
     def merge(self, other):
         """Recursive merge with other Option or dict object"""
-        for key, value in other.items():
+        for key, value in iteritems(other):
             if key in self:
                 if isinstance(self[key], Option):
                     self[key].merge(other[key])

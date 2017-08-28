@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import unicode_literals
+from future.builtins import str, bytes
+
+
 def clamp(minValue, maxValue, value):
     """Make sure value is between minValue and maxValue"""
     if value < minValue:
@@ -27,13 +31,13 @@ def clamp(minValue, maxValue, value):
 
 def safe_unicode(obj, encoding=None):
     """Return a unicode value from the argument"""
-    if isinstance(obj, unicode):
+    if isinstance(obj, str):
         return obj
-    elif isinstance(obj, str):
+    elif isinstance(obj, bytes):
         if encoding is None:
-            return unicode(obj)
+            return str(obj)
         else:
-            return unicode(obj, encoding)
+            return str(obj, encoding)
     else:
         # it may be an int or a float
-        return unicode(obj)
+        return str(obj)

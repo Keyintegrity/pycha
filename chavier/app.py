@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Chavier.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import unicode_literals
+from future.builtins import range, object, str
 import cairo
 
 from pycha.chart import DEFAULT_OPTIONS
@@ -51,7 +53,7 @@ class App(object):
      POLYGONAL_TYPE,
      SCATTER_TYPE,
      STACKED_VERTICAL_BAR_TYPE,
-     STACKED_HORIZONTAL_BAR_TYPE) = range(len(CHART_TYPES))
+     STACKED_HORIZONTAL_BAR_TYPE) = list(range(len(CHART_TYPES)))
 
     OPTIONS_TYPES = dict(
         axis=dict(
@@ -70,7 +72,7 @@ class App(object):
                 tickPrecision=int,
                 range=list,
                 rotate=float,
-                label=unicode,
+                label=str,
                 interval=int,
                 showLines=bool,
                 ),
@@ -81,7 +83,7 @@ class App(object):
                 tickPrecision=int,
                 range=list,
                 rotate=float,
-                label=unicode,
+                label=str,
                 interval=int,
                 showLines=bool,
                 ),
@@ -137,7 +139,7 @@ class App(object):
                 colors=list,
                 ),
             ),
-        title=unicode,
+        title=str,
         titleColor=str,
         titleFont=str,
         titleFontSize=int,

@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import unicode_literals
+from future.builtins import range
 from pycha.bar import BarChart, VerticalBarChart, HorizontalBarChart, Rect
 from pycha.chart import uniqueIndices
 from functools import reduce
@@ -38,7 +41,7 @@ class StackedBarChart(BarChart):
             n_stores = len(stores)
             flat_y = [pair[1] for pair in reduce(lambda a, b: a+b, stores)]
             store_size = len(flat_y) / n_stores
-            accum = [sum(flat_y[j]for j in xrange(i,
+            accum = [sum(flat_y[j]for j in range(i,
                                                   i + store_size * n_stores,
                                                   store_size))
                      for i in range(len(flat_y) / n_stores)]

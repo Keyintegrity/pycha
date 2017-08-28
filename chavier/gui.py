@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of Chavier.
@@ -16,6 +15,10 @@ from __future__ import print_function
 # You should have received a copy of the GNU Lesser General Public License
 # along with Chavier.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+from __future__ import unicode_literals
+from future.builtins import str, range, object
+from future.utils import iteritems
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -277,7 +280,7 @@ class GUI(object):
         return scrolled_window
 
     def _fill_options_store(self, options, parent_node, types):
-        for name, value in options.items():
+        for name, value in iteritems(options):
             value_type = types[name]
             if isinstance(value, dict):
                 current_parent = self.options_store.append(parent_node,
@@ -557,6 +560,5 @@ str_converters = {
     str: str,
     int: int,
     float: float,
-    unicode: unicode,
     bool: str2bool,
 }

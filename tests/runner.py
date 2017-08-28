@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 # Copyright (c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
@@ -16,6 +15,8 @@ from __future__ import absolute_import
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import unittest
 
 from . import bar

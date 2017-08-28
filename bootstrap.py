@@ -18,8 +18,13 @@ The script accepts buildout command-line options, so you can
 use the -c option to specify an alternate configuration file.
 """
 from __future__ import print_function
+from __future__ import unicode_literals
 
-import os, shutil, sys, tempfile, textwrap, urllib, urllib2, subprocess
+from future import standard_library
+standard_library.install_aliases()
+from future.builtins import map
+from future.utils import iteritems
+import os, shutil, sys, tempfile, textwrap, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, subprocess
 from optparse import OptionParser
 
 if sys.platform == 'win32':
@@ -51,7 +56,7 @@ if not has_broken_dash_S and 'site' in sys.modules:
     # We will restart with python -S.
     args = sys.argv[:]
     args[0:0] = [sys.executable, '-S']
-    args = map(quote, args)
+    args = list(map(quote, args))
     os.execv(sys.executable, args)
 # Now we are running with -S.  We'll get the clean sys.path, import site
 # because distutils will do it later, and then reset the path and clean
@@ -60,7 +65,7 @@ if not has_broken_dash_S and 'site' in sys.modules:
 clean_path = sys.path[:]
 import site
 sys.path[:] = clean_path
-for k, v in sys.modules.items():
+for k, v in iteritems(sys.modules):
     if k in ('setuptools', 'pkg_resources') or (
         hasattr(v, '__path__') and
         len(v.__path__)==1 and
@@ -78,7 +83,7 @@ def normalize_to_url(option, opt_str, value, parser):
     if value:
         if '://' not in value: # It doesn't smell like a URL.
             value = 'file://%s' % (
-                urllib.pathname2url(
+                urllib.request.pathname2url(
                     os.path.abspath(os.path.expanduser(value))),)
         if opt_str == '--download-base' and not value.endswith('/'):
             # Download base needs a trailing slash to make the world happy.
@@ -161,7 +166,7 @@ try:
     if not hasattr(pkg_resources, '_distribute'):
         raise ImportError
 except ImportError:
-    ez_code = urllib2.urlopen(
+    ez_code = urllib.request.urlopen(
         options.setup_source).read().replace('\r\n', '\n')
     ez = {}
     exec(ez_code, ez)

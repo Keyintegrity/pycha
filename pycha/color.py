@@ -16,9 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import unicode_literals
 import math
 
 from pycha.utils import clamp
+from future.utils import with_metaclass
 
 
 DEFAULT_COLOR = '#3c581a'
@@ -123,11 +126,9 @@ class ColorSchemeMetaclass(type):
         return klass
 
 
-class ColorScheme(dict):
+class ColorScheme(with_metaclass(ColorSchemeMetaclass, dict)):
     """A color scheme is a dictionary where the keys match the keys
     constructor argument and the values are colors"""
-
-    __metaclass__ = ColorSchemeMetaclass
     __registry__ = {}
 
     def __init__(self, keys):

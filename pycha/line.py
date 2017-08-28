@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import unicode_literals
+from future.builtins import object
 from pycha.chart import Chart
 from pycha.color import hex2rgb
 

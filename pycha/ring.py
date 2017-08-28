@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from __future__ import unicode_literals
+from future.builtins import str, object
 import math
 
 import cairo
@@ -80,7 +83,7 @@ class RingChart(Chart):
     def _updateTicks(self):
         """Evaluates pie ticks"""
         self.xticks = []
-        lookups = [key for key in self.slices.keys()]
+        lookups = [key for key in self.slices]
         if self.options.axis.x.ticks:
             ticks = [tick['v'] for tick in self.options.axis.x.ticks]
             if frozenset(lookups) != frozenset(ticks):
