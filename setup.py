@@ -39,12 +39,11 @@ setup(
     keywords="chart cairo",
     packages=['pycha', 'chavier'],
     url='http://bitbucket.org/lgs/pycha/',
-
-    # if would be nice if pycairo would have an egg (sigh)
-    # install_requires=[
-    #     'pycairo',
-    # ],
-
+    install_requires=[
+        'future>=0.16.0',
+        # it would be nice if pycairo had an egg (sigh)
+        # 'pycairo',
+    ],
     zip_safe=True,
     entry_points={
         'gui_scripts': [
