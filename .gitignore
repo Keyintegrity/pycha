@@ -1,0 +1,11 @@
+.installed.cfg
+*.pyc
+*.egg-info
+bin
+develop-eggs
+eggs
+examples/*.png
+examples/*.svg
+docs/build/*
+parts
+.idea
