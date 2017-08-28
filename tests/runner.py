@@ -15,16 +15,15 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with PyCha.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 from __future__ import unicode_literals
 import unittest
 
-from . import bar
-from . import chart
-from . import color
-from . import line
-from . import pie
-from . import utils
+import bar
+import chart
+import color
+import line
+import pie
+import utils
 
 def test_suite():
     return unittest.TestSuite((
