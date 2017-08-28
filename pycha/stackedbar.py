@@ -17,6 +17,7 @@
 
 from pycha.bar import BarChart, VerticalBarChart, HorizontalBarChart, Rect
 from pycha.chart import uniqueIndices
+from functools import reduce
 
 
 class StackedBarChart(BarChart):

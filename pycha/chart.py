@@ -23,6 +23,7 @@ import cairo
 
 from pycha.color import ColorScheme, hex2rgb, DEFAULT_COLOR
 from pycha.utils import safe_unicode
+from functools import reduce
 
 
 class Chart(object):

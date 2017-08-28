@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # Copyright (c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of PyCha.
@@ -17,12 +18,12 @@
 
 import unittest
 
-import bar
-import chart
-import color
-import line
-import pie
-import utils
+from . import bar
+from . import chart
+from . import color
+from . import line
+from . import pie
+from . import utils
 
 def test_suite():
     return unittest.TestSuite((

@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Copyright(c) 2007-2010 by Lorenzo Gil Sanchez <lorenzo.gil.sanchez@gmail.com>
 #
 # This file is part of Chavier.
@@ -523,18 +524,18 @@ class GUI(object):
 
         alloc = self.drawing_area.get_allocation()
 
-        print 'CHART STATE'
-        print '-' * 70
-        print 'surface: %d x %d' % (alloc.width, alloc.height)
-        print 'area   :', self.chart.area
-        print
-        print 'minxval:', self.chart.minxval
-        print 'maxxval:', self.chart.maxxval
-        print 'xrange :', self.chart.xrange
-        print
-        print 'minyval:', self.chart.minyval
-        print 'maxyval:', self.chart.maxyval
-        print 'yrange :', self.chart.yrange
+        print('CHART STATE')
+        print('-' * 70)
+        print('surface: %d x %d' % (alloc.width, alloc.height))
+        print('area   :', self.chart.area)
+        print()
+        print('minxval:', self.chart.minxval)
+        print('maxxval:', self.chart.maxxval)
+        print('xrange :', self.chart.xrange)
+        print()
+        print('minyval:', self.chart.minyval)
+        print('maxyval:', self.chart.maxyval)
+        print('yrange :', self.chart.yrange)
 
     def about(self, action=None):
         dialog = AboutDialog(self.main_window)
