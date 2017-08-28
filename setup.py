@@ -20,6 +20,7 @@ from setuptools import setup
 
 from pycha import version
 
+
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
@@ -38,10 +39,12 @@ setup(
     keywords="chart cairo",
     packages=['pycha', 'chavier'],
     url='http://bitbucket.org/lgs/pycha/',
+
     # if would be nice if pycairo would have an egg (sigh)
-#    install_requires = [
-#        'pycairo',
-#    ],
+    # install_requires=[
+    #     'pycairo',
+    # ],
+
     zip_safe=True,
     entry_points={
         'gui_scripts': [
