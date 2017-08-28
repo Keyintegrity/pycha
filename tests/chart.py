@@ -141,7 +141,7 @@ class ChartTests(unittest.TestCase):
         dataset = (('dataset1', ([0, 1], [1, 1])), )
         ch.addDataset(dataset)
         ch._setColorscheme()
-        self.assert_(isinstance(ch.colorScheme, dict))
+        self.assertIsInstance(ch.colorScheme, dict)
         self.assertEqual(ch.colorScheme, {'dataset1': (0.0, 0.0, 0.0)})
 
         options = {'colorScheme': {'name': 'foo'}}
